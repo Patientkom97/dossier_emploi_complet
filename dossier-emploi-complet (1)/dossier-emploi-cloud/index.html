@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dossier Emploi</title>
+<style>
+:root{--bg:#eef1f4;--card:#fff;--ink:#16202e;--mut:#5d6b7c;--acc:#0f6b5c;--on:#fff;--soft:#d9efe9;--line:#d5dce3;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10161d;--card:#18212b;--ink:#e8edf2;--mut:#93a1b1;--acc:#4cc2ab;--on:#0c1a17;--soft:#1c3a35;--line:#2a3643}}
+:root[data-theme="dark"]{--bg:#10161d;--card:#18212b;--ink:#e8edf2;--mut:#93a1b1;--acc:#4cc2ab;--on:#0c1a17;--soft:#1c3a35;--line:#2a3643}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Figtree",system-ui,-apple-system,"Segoe UI",sans-serif}
+header{padding:18px 20px 0;max-width:1200px;margin:auto}
+h1{font-size:26px;margin:0;letter-spacing:-.02em}header p{margin:2px 0 0;color:var(--mut)}
+nav{display:flex;gap:4px;overflow-x:auto;padding:14px 20px 0;max-width:1200px;margin:auto}
+nav button{border:0;background:none;color:var(--mut);padding:9px 14px;border-radius:8px 8px 0 0;font:inherit;font-weight:600;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent}
+nav button.on{color:var(--ink);border-color:var(--acc)}
+main{max-width:1200px;margin:auto;padding:0 20px 40px}
+section{display:none;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:20px;margin-top:-1px}section.on{display:block}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px}
+@media(max-width:820px){.two{grid-template-columns:1fr}}
+label{display:block;font-weight:600;margin:12px 0 4px}
+input,textarea,select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px}
+textarea{min-height:90px;resize:vertical}
+input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.btn{background:var(--acc);color:var(--on);border:0;border-radius:6px;padding:9px 14px;font:inherit;font-weight:600;cursor:pointer;margin:8px 8px 0 0}
+.btn.alt{background:var(--soft);color:var(--ink)}
+.row{display:flex;gap:10px;flex-wrap:wrap}.row>*{flex:1;min-width:120px}
+.hint{color:var(--mut);font-size:13px;margin:6px 0}
+h2{margin:0 0 4px;font-size:19px}
+.paper{background:#fff;color:#111;width:100%;max-width:640px;aspect-ratio:210/297;padding:34px;font-size:11px;line-height:1.45;border:1px solid var(--line);overflow:hidden;position:relative}
+.paper h3{margin:0;font-size:24px}.paper .sub{color:#444;font-size:13px}
+.paper h4{margin:14px 0 4px;font-size:12px;border-bottom:1px solid #bbb;padding-bottom:2px}
+.chip{display:inline-block;background:#e6efed;border-radius:3px;padding:1px 7px;margin:0 4px 4px 0}
+.t1{font-family:Georgia,serif}.t1 .hd{text-align:center}
+.t2 .hd{background:#0f6b5c;color:#fff;margin:-34px -34px 14px;padding:26px 34px}.t2 .hd .sub{color:#dff}.t2 h4{color:#0f6b5c;border-color:#0f6b5c}
+.t3{font-family:"Courier New",monospace}.t3 h4{border:0;text-transform:none;font-weight:700}
+.t4 .hd{background:#1d3557;color:#fff;margin:-34px -34px 14px;padding:26px 34px}.t4 .hd .sub{color:#cfe}.t4 h4{color:#1d3557;border:0;background:#e8eef6;padding:3px 6px}
+.t5{font-family:"Helvetica Neue",Arial,sans-serif}.t5 h3{font-weight:300;font-size:30px;letter-spacing:.04em}.t5 h4{border:0;color:#777;letter-spacing:.12em;margin-top:18px}
+.t6 .hd{border-left:6px solid #e4572e;padding-left:12px}.t6 h4{border:0;border-left:4px solid #e4572e;padding-left:8px;color:#e4572e}.t6 .chip{background:#fde3dc}
+.gal{display:flex;gap:16px;overflow-x:auto;padding:6px 2px 12px}
+.gal button{flex:none;border:2px solid var(--line);background:none;border-radius:8px;padding:6px;cursor:pointer;color:var(--ink);font:inherit;font-weight:600}
+.gal button.on{border-color:var(--acc)}.gal .th{width:192px;height:272px;overflow:hidden;margin-bottom:6px;pointer-events:none}
+.gal .th>div{transform:scale(.3);transform-origin:0 0;width:640px}.gal .paper{width:640px;max-width:none}
+.hd{display:flex;gap:14px;align-items:center}.t1 .hd{justify-content:center}.hd img{width:76px;height:76px;min-width:76px;flex:none;aspect-ratio:1/1;object-fit:cover;object-position:center 25%;border-radius:50%}
+.sig{position:absolute;bottom:50px}
+table{width:100%;border-collapse:collapse}td,th{border-bottom:1px solid var(--line);padding:7px 6px;text-align:left;vertical-align:top}
+.files li{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:1px solid var(--line);list-style:none}ul.files{padding:0}
+canvas{background:repeating-conic-gradient(#e5e5e5 0 25%,#fff 0 50%) 0 0/16px 16px;border:1px solid var(--line);border-radius:6px;max-width:100%;touch-action:none}
+#pr{display:none}
+@media print{body>*:not(#pr){display:none!important}#pr{display:block}#pr .paper{max-width:none;width:210mm;height:297mm;border:0;page-break-after:always}@page{margin:0}}
+body:not(.in) header,body:not(.in) nav,body:not(.in) main{display:none}
+#auth{display:none;min-height:100vh;align-items:center;justify-content:center;padding:20px}#auth>div{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:24px;width:100%;max-width:380px}
+#amsg{color:var(--acc);font-size:13px;min-height:18px}.lnk{background:none;border:0;color:var(--mut);text-decoration:underline;cursor:pointer;font:inherit;padding:0;margin-top:10px}
+</style></head><body>
+<div id="auth"><div><h1>Dossier Emploi</h1><p class="hint">Connectez-vous pour retrouver votre dossier sur tous vos appareils.</p><label>E-mail</label><input id="aem" type="email" autocomplete="email"><label>Mot de passe</label><input id="apw" type="password" autocomplete="current-password"><div class="row"><button class="btn" id="li">Se connecter</button><button class="btn alt" id="su">Créer un compte</button></div><button class="btn alt" id="gg" style="width:100%">Continuer avec Google</button><button class="lnk" id="fg">Mot de passe oublié ?</button><p id="amsg"></p></div></div>
+<header><button class="btn alt" id="out" style="float:right;margin:0">Se déconnecter</button><span id="who" class="hint" style="float:right;margin:8px 10px 0"></span><h1>Dossier Emploi</h1><p>CV, lettre, signature, pièces et suivi au même endroit.</p></header>
+<nav id="nav"></nav>
+<main>
+<section id="cv"><div class="two"><div>
+<h2>CV</h2>
+<label>Modèle</label><select id="tpl"><option value="t1">Classique</option><option value="t2">Moderne</option><option value="t3">Sobre</option><option value="t4">Marine</option><option value="t5">Minimal</option><option value="t6">Corail</option></select>
+<div class="row"><div><label>Nom complet</label><input id="name"></div><div><label>Poste visé</label><input id="title"></div></div>
+<div class="row"><div><label>E-mail</label><input id="email"></div><div><label>Téléphone</label><input id="phone"></div><div><label>Ville</label><input id="city"></div></div>
+<label>Photo</label><input type="file" id="photo" accept="image/*">
+<label>Profil</label><textarea id="summary"></textarea>
+<label>Expériences professionnelles</label><div id="xps"></div><button class="btn alt" id="addXp">Ajouter une expérience</button>
+<label>Formation</label><textarea id="edu"></textarea>
+<label>Compétences (séparées par des virgules)</label><input id="skills">
+<button class="btn" id="pdfCv">Exporter en PDF</button><button class="btn alt" id="htmlCv">Télécharger en HTML</button>
+<p class="hint">Dans la fenêtre d'impression, choisissez « Enregistrer en PDF ». Export Word : à venir.</p>
+</div><div><div class="paper" id="cvPrev"></div></div></div>
+<h2 style="margin-top:28px">Modèles de CV</h2><p class="hint">Choisissez un modèle : il s'applique à votre CV avec vos informations.</p><div class="gal" id="gal"></div></section>
+
+<section id="lt"><div class="two"><div>
+<h2>Lettre de motivation</h2>
+<div class="row"><div><label>Destinataire</label><input id="lrec" placeholder="Monsieur le Directeur Général"></div><div><label>Entreprise</label><input id="lco" placeholder="Conseil Congolais de la Batterie (CCB)"></div></div>
+<div class="row"><div><label>Adresse ou ville du destinataire</label><input id="ladr" placeholder="Kinshasa Gombe"></div><div><label>Objet</label><input id="lpo" placeholder="Demande de stage professionnel"></div></div>
+<div class="row"><div><label>Mise en forme</label><select id="lfont"><option value="Georgia,serif">Serif</option><option value="system-ui,sans-serif">Sans</option></select></div>
+<div><label>Signature</label><select id="lsig"><option value="right">À droite</option><option value="left">À gauche</option><option value="none">Sans</option></select></div></div>
+<div class="row" style="margin-top:12px"><button class="btn alt" data-f="bold">Gras</button><button class="btn alt" data-f="italic">Italique</button></div>
+<label>Texte</label><div id="ltxt" contenteditable="true" style="min-height:240px;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px"></div>
+<button class="btn" id="pdfLt">Exporter en PDF</button>
+</div><div><div class="paper" id="ltPrev"></div></div></div></section>
+
+<section id="sg"><h2>Signature électronique</h2>
+<p class="hint">Dessinez avec la souris ou le doigt, ou importez une image.</p>
+<canvas id="cnv" width="520" height="180"></canvas>
+<div class="row" style="max-width:520px"><button class="btn" id="saveSig">Utiliser ce dessin</button><button class="btn alt" id="clr">Effacer</button></div>
+<label>Importer une image</label><input type="file" id="sigFile" accept="image/*" style="max-width:520px">
+<label>Taille (<span id="szv">160</span> px)</label><input type="range" id="sz" min="60" max="320" value="160" style="max-width:520px">
+<p class="hint">Le fond clair est supprimé automatiquement. Position dans la lettre : onglet Lettre.</p>
+<div id="sigPrev" style="background:#fff;padding:12px;display:inline-block;border:1px solid var(--line)"></div></section>
+
+<section id="pj"><h2>Pièces jointes et coffre-fort</h2>
+<p class="hint">Diplômes, certificats, attestations, pièces d'identité, photos. Cochez celles à inclure dans le dossier. Les fichiers restent dans cette session.</p>
+<input type="file" id="fileIn" multiple accept="image/*,application/pdf">
+<ul class="files" id="fileList"></ul></section>
+
+<section id="ia"><h2>Assistant IA</h2>
+<label>Offre d'emploi (collez le texte)</label><textarea id="offer" style="min-height:160px"></textarea>
+<button class="btn" data-ai="cv">Conseils pour adapter mon CV</button><button class="btn" data-ai="lt">Rédiger la lettre ciblée</button><button class="btn alt" data-ai="fix">Corriger et améliorer ma lettre</button>
+<p class="hint" id="aiSt"></p><div id="aiOut" style="white-space:pre-wrap"></div></section>
+
+<section id="sv"><h2>Suivi des candidatures</h2>
+<div class="row"><input id="a1" placeholder="Entreprise"><input id="a2" placeholder="Poste"><input id="a3" type="date" title="Date d'envoi"><select id="a4"><option>Envoyée</option><option>En attente</option><option>Entretien</option><option>Refusée</option><option>Acceptée</option></select><input id="a5" type="date" title="Date de relance"><input id="a6" placeholder="Notes"></div>
+<button class="btn" id="addApp">Ajouter la candidature</button>
+<div style="overflow-x:auto"><table><thead><tr><th>Entreprise</th><th>Poste</th><th>Envoi</th><th>Statut</th><th>Relance</th><th>Notes</th><th></th></tr></thead><tbody id="apps"></tbody></table></div></section>
+
+<section id="dp"><h2>Dossier complet</h2>
+<ul class="files" id="check"></ul>
+<button class="btn" id="pdfAll">PDF du dossier (lettre, CV, pièces)</button><button class="btn alt" id="zipAll">Archive ZIP</button>
+<p class="hint">Le PDF passe par l'impression du navigateur : choisissez « Enregistrer en PDF ».</p></section>
+</main>
+<div id="pr"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+const SB_URL='https://ncktrdsdmccwfqestdkk.supabase.co',SB_KEY='sb_publishable_rTwHXl1AUYkaxFy58OJHjw_h-KJYT9_';
+if(typeof supabase==='undefined'){document.getElementById('auth').style.display='flex';document.getElementById('amsg').textContent="Bibliothèque Supabase non chargée : vérifiez votre connexion Internet et rechargez."}
+const sb=supabase.createClient(SB_URL,SB_KEY);let U=null;
+(async()=>{const A=id=>document.getElementById(id),msg=t=>A('amsg').textContent=t;
+const{data:{session}}=await sb.auth.getSession();
+if(!session){A('auth').style.display='flex';
+
+const cred=()=>({email:A('aem').value.trim(),password:A('apw').value});
+A('li').onclick=async()=>{msg('Connexion…');try{const{error}=await sb.auth.signInWithPassword(cred());error?msg('Erreur : '+error.message):location.reload()}catch(x){msg('Erreur réseau : '+x.message)}};
+A('su').onclick=async()=>{const c=cred();if(!c.email||c.password.length<6)return msg('Entrez un e-mail valide et un mot de passe de 6 caractères minimum.');msg('Création du compte…');
+try{const{data,error}=await sb.auth.signUp({...c,options:{emailRedirectTo:location.origin+location.pathname}});if(error)return msg('Erreur : '+error.message);
+if(data.session)return location.reload();
+if(data.user&&data.user.identities&&data.user.identities.length===0)return msg('Cet e-mail a déjà un compte : cliquez sur Se connecter.');
+msg('Compte créé. Un e-mail de confirmation vous a été envoyé : cliquez sur le lien, puis connectez-vous.')}catch(x){msg('Erreur réseau : '+x.message)}};
+A('gg').onclick=()=>sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin+location.pathname}});
+A('fg').onclick=async()=>{const{error}=await sb.auth.resetPasswordForEmail(A('aem').value.trim(),{redirectTo:location.origin+location.pathname});msg(error?error.message:'E-mail de réinitialisation envoyé.')};
+return}
+U=session.user;document.body.classList.add('in');A('who').textContent=U.email;
+A('out').onclick=async()=>{await sb.auth.signOut();location.reload()};
+
+const $=id=>document.getElementById(id),e=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const br=s=>e(s).replace(/\n/g,'<br>');
+let S={cv:{},lt:'',lco:'',lpo:'',lfont:'Georgia,serif',lsig:'left',sig:null,sz:160,apps:[]},files=[];
+{const{data:row}=await sb.from('dossiers').select('data').eq('user_id',U.id).maybeSingle();if(row&&row.data)S=Object.assign(S,row.data);
+const{data:ls}=await sb.storage.from('pieces').list(U.id);(ls||[]).forEach(n=>files.push({name:n.name.replace(/^\d+-/,''),path:U.id+'/'+n.name,on:true}))}
+let tm;const push=()=>sb.from('dossiers').upsert({user_id:U.id,data:S,updated_at:new Date().toISOString()});const save=()=>{clearTimeout(tm);tm=setTimeout(push,800)};
+const getBlob=async o=>o.f||(await sb.storage.from('pieces').download(o.path)).data;
+// onglets
+const tabs=[['cv','CV'],['lt','Lettre'],['sg','Signature'],['pj','Pièces'],['ia','Assistant IA'],['sv','Suivi'],['dp','Dossier']];
+$('nav').innerHTML=tabs.map(t=>`<button data-t="${t[0]}">${t[1]}</button>`).join('');
+function go(t){document.querySelectorAll('section').forEach(s=>s.classList.toggle('on',s.id===t));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));if(t==='dp')check()}
+$('nav').onclick=ev=>{if(ev.target.dataset.t)go(ev.target.dataset.t)};go('cv');
+// CV
+const F=['name','title','email','phone','city','summary','edu','skills'];
+S.cv.xp=S.cv.xp||[{}];
+const mois=v=>{if(!v)return'';const[a,m]=v.split('-');return new Date(a,m-1).toLocaleDateString('fr-FR',{month:'long',year:'numeric'})};
+const xpDate=x=>[mois(x.d1),x.cur?"aujourd'hui":mois(x.d2)].filter(Boolean).join(' – ');
+const expTxt=()=>S.cv.xp.map(x=>`${x.po||''}, ${x.co||''} (${xpDate(x)}) : ${x.tasks||''}`).join('\n');
+function xpR(){$('xps').innerHTML=S.cv.xp.map((x,i)=>`<fieldset style="border:1px solid var(--line);border-radius:6px;margin:8px 0;padding:4px 12px 12px" data-i="${i}"><legend>Expérience ${i+1}</legend>
+<div class="row"><div><label>Poste</label><input data-k="po" value="${e(x.po)}"></div><div><label>Entreprise ou organisation</label><input data-k="co" value="${e(x.co)}"></div></div>
+<div class="row"><div><label>Début</label><input type="month" data-k="d1" value="${e(x.d1)}"></div><div><label>Fin</label><input type="month" data-k="d2" value="${e(x.d2)}" ${x.cur?'disabled':''}></div></div>
+<label style="font-weight:400"><input type="checkbox" data-k="cur" style="width:auto" ${x.cur?'checked':''}> Toujours en cours</label>
+<label>Tâches et responsabilités (une par ligne)</label><textarea data-k="tasks">${e(x.tasks)}</textarea>
+${S.cv.xp.length>1?'<button class="btn alt" data-rm="1">Supprimer cette expérience</button>':''}</fieldset>`).join('')}
+$('addXp').onclick=()=>{S.cv.xp.push({});save();xpR();cvR()};
+$('xps').oninput=ev=>{const k=ev.target.dataset.k;if(!k)return;const x=S.cv.xp[+ev.target.closest('fieldset').dataset.i];x[k]=k==='cur'?ev.target.checked:ev.target.value;save();if(k==='cur')xpR();cvR()};
+$('xps').onclick=ev=>{if(ev.target.dataset.rm){S.cv.xp.splice(+ev.target.closest('fieldset').dataset.i,1);save();xpR();cvR()}};
+xpR();
+F.forEach(k=>{$(k).value=S.cv[k]||'';$(k).oninput=()=>{S.cv[k]=$(k).value;save();cvR();ltR()}});
+$('tpl').value=S.cv.tpl||'t1';$('tpl').onchange=()=>{S.cv.tpl=$('tpl').value;save();cvR()};
+$('photo').onchange=ev=>rd(ev.target.files[0],d=>{S.cv.photo=d;cvR()});
+function rd(f,cb){if(!f)return;const r=new FileReader();r.onload=()=>cb(r.result);r.readAsDataURL(f)}
+function cvHtml(t){const c=S.cv;return `<div class="paper ${t||c.tpl||'t1'}"><div class="hd">${c.photo?`<img src="${c.photo}" alt="">`:''}<div><h3>${e(c.name)||'Votre nom'}</h3><div class="sub">${e(c.title)}</div><div class="sub">${[c.email,c.phone,c.city].filter(Boolean).map(e).join(' | ')}</div></div></div>
+${c.summary?`<h4>Profil</h4>${br(c.summary)}`:''}${c.xp.some(x=>x.po||x.co)?`<h4>Expériences</h4>${c.xp.filter(x=>x.po||x.co).map(x=>`<div style="margin-bottom:8px"><b>${e(x.po)}</b>${x.po&&x.co?' – ':''}${e(x.co)}<div class="sub" style="font-size:10px">${e(xpDate(x))}</div>${x.tasks?`<ul style="margin:3px 0 0;padding-left:16px">${x.tasks.split('\n').filter(t=>t.trim()).map(t=>`<li>${e(t.replace(/^[-•*]\s*/,''))}</li>`).join('')}</ul>`:''}</div>`).join('')}`:''}${c.edu?`<h4>Formation</h4>${br(c.edu)}`:''}
+${c.skills?`<h4>Compétences</h4>${c.skills.split(',').filter(s=>s.trim()).map(s=>`<span class="chip">${e(s.trim())}</span>`).join('')}`:''}</div>`}
+const TPL=[['t1','Classique'],['t2','Moderne'],['t3','Sobre'],['t4','Marine'],['t5','Minimal'],['t6','Corail']];
+function galR(){$('gal').innerHTML=TPL.map(t=>`<button data-t="${t[0]}" class="${(S.cv.tpl||'t1')===t[0]?'on':''}"><div class="th"><div>${cvHtml(t[0])}</div></div>${t[1]}</button>`).join('')}
+$('gal').onclick=ev=>{const b=ev.target.closest('button');if(!b)return;S.cv.tpl=b.dataset.t;$('tpl').value=b.dataset.t;save();cvR()};
+function cvR(){$('cvPrev').outerHTML=cvHtml().replace('class="paper','id="cvPrev" class="paper');galR()}
+// Lettre
+['lrec','lco','ladr','lpo','lfont','lsig'].forEach(k=>{$(k).value=S[k]||$(k).value;$(k).oninput=()=>{S[k]=$(k).value;save();ltR()}});
+$('ltxt').innerHTML=S.lt;$('ltxt').oninput=()=>{S.lt=$('ltxt').innerHTML;save();ltR()};
+document.querySelectorAll('[data-f]').forEach(b=>b.onmousedown=ev=>{ev.preventDefault();document.execCommand(b.dataset.f)});
+function ltHtml(){const c=S.cv,d=new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
+const al=S.lsig==='left'?'left':'right';
+const sg=S.lsig!=='none'?`<div style="margin-top:18px;text-align:${al}"><b>${e(c.name)}</b>${S.sig?`<br><img src="${S.sig}" style="width:${S.sz*.8}px" alt="Signature">`:''}</div>`:'';
+const dest=(S.lrec||S.lco||S.ladr)?`<div style="margin:26px 0 0 auto;width:60%;text-align:right">${S.lrec?`<b>À l'attention de ${e(S.lrec)}</b><br>`:''}${e(S.lco)}${S.lco?'<br>':''}${S.ladr?`<b><u>${e(S.ladr)}</u></b>`:''}</div>`:'';
+return `<div class="paper" style="font-family:${S.lfont};font-size:11.5px;aspect-ratio:auto;min-height:0;overflow:visible"><div style="display:flex;justify-content:space-between;gap:12px"><div><b>${e(c.name)}</b><br>${e(c.title)}${c.title?'<br>':''}${c.phone?'Téléphone : '+e(c.phone)+'<br>':''}${c.email?'E-mail : '+e(c.email):''}</div><div style="text-align:right;white-space:nowrap">${c.city?e(c.city)+', ':''}le ${d}</div></div>${dest}
+<div style="margin:22px 0 18px;border-left:4px solid #1d3557;background:#eef1f6;padding:4px 8px"><u><b>Objet</b></u> : <b>${e(S.lpo)||'…'}</b></div><div style="text-align:justify">${S.lt||'Rédigez votre lettre ici…'}</div>${sg}</div>`}
+function ltR(){$('ltPrev').outerHTML=ltHtml().replace('class="paper"','id="ltPrev" class="paper"')}
+// Signature
+const cv=$('cnv'),cx=cv.getContext('2d');let dr=false;cx.lineWidth=3;cx.lineCap='round';cx.strokeStyle='#111';
+const pt=ev=>{const r=cv.getBoundingClientRect();return[(ev.clientX-r.left)*cv.width/r.width,(ev.clientY-r.top)*cv.height/r.height]};
+cv.onpointerdown=ev=>{dr=true;const p=pt(ev);cx.beginPath();cx.moveTo(...p);cv.setPointerCapture(ev.pointerId)};
+cv.onpointermove=ev=>{if(dr){cx.lineTo(...pt(ev));cx.stroke()}};cv.onpointerup=()=>dr=false;
+$('clr').onclick=()=>cx.clearRect(0,0,cv.width,cv.height);
+$('saveSig').onclick=()=>{S.sig=cv.toDataURL();sigR()};
+$('sigFile').onchange=ev=>rd(ev.target.files[0],d=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas');c.width=im.width;c.height=im.height;const x=c.getContext('2d');x.drawImage(im,0,0);const p=x.getImageData(0,0,c.width,c.height),a=p.data;
+for(let i=0;i<a.length;i+=4){const l=.3*a[i]+.59*a[i+1]+.11*a[i+2];if(l>170)a[i+3]=0}x.putImageData(p,0,0);S.sig=c.toDataURL();sigR()};im.src=d});
+$('sz').value=S.sz;$('sz').oninput=()=>{S.sz=+$('sz').value;sigR()};
+function sigR(){$('szv').textContent=S.sz;$('sigPrev').innerHTML=S.sig?`<img src="${S.sig}" style="width:${S.sz}px" alt="Signature">`:'<span class="hint">Aucune signature</span>';save();ltR()}
+// Pièces
+$('fileIn').onchange=async ev=>{for(const f of [...ev.target.files]){const path=U.id+'/'+Date.now()+'-'+f.name;const{error}=await sb.storage.from('pieces').upload(path,f);if(!error)files.push({f,name:f.name,path,on:true})}ev.target.value='';fl()};
+function fl(){$('fileList').innerHTML=files.length?files.map((o,i)=>`<li><label style="margin:0;font-weight:400"><input type="checkbox" data-i="${i}" ${o.on?'checked':''} style="width:auto"> ${e(o.name)}</label><button class="btn alt" data-d="${i}" style="margin:0">Retirer</button></li>`).join(''):'<li class="hint">Aucun fichier pour le moment.</li>'}
+$('fileList').onclick=ev=>{const d=ev.target.dataset.d;if(d!==undefined){const o=files.splice(+d,1)[0];sb.storage.from('pieces').remove([o.path]);fl()}};
+$('fileList').onchange=ev=>{files[+ev.target.dataset.i].on=ev.target.checked};fl();
+// IA
+let aiCtl=null;
+async function ai(kind){const st=$('aiSt'),out=$('aiOut');const o=$('offer').value.trim();
+if(kind!=='fix'&&!o){st.textContent="Collez d'abord le texte de l'offre d'emploi.";return}
+if(kind==='fix'&&!$('ltxt').innerText.trim()){st.textContent="Écrivez d'abord votre lettre dans l'onglet Lettre.";return}
+st.textContent="Connexion à l'assistant… (autorisez la demande si une fenêtre apparaît)";out.textContent='';
+const sm=async q=>{const{data,error}=await sb.functions.invoke('assistant',{body:{prompt:q}});if(error)throw error;return{text:data.text}};
+if(!sm){st.textContent="L'assistant IA n'est disponible que dans la page publiée ouverte depuis claude.ai, avec un compte connecté.";return}
+const c=S.cv,prof=`CV : ${c.name||''}, ${c.title||''}. Profil : ${c.summary||''}. Expériences : ${expTxt()}. Formation : ${c.edu||''}. Compétences : ${c.skills||''}.`;
+let p;
+if(kind==='cv')p=`Offre d'emploi :\n${o}\n\n${prof}\n\nDonne 6 suggestions concrètes en français pour adapter ce CV à l'offre (mots-clés à reprendre, expériences à mettre en avant, points à ajouter). Texte simple, une suggestion par ligne.`;
+else if(kind==='lt')p=`Offre d'emploi :\n${o}\n\n${prof}\n\nRédige en français une lettre de motivation ciblée, 250 mots maximum. Pas d'en-tête, pas d'objet : commence par la formule d'appel et termine par la formule de politesse. Texte seul.`;
+else p=`Corrige les fautes et améliore le style de cette lettre sans changer le sens. Réponds avec le texte corrigé seul :\n\n${$('ltxt').innerText}`;
+st.textContent='Réflexion en cours…';aiCtl=new AbortController();
+try{const r=await sm(p,{signal:aiCtl.signal,cache:false,modelTier:'default',onText:x=>{st.textContent='Rédaction en cours…';out.textContent=x.text}});
+out.textContent=r.text;
+if(kind==='cv')st.textContent='Suggestions prêtes.';
+else{$('ltxt').innerHTML=br(r.text.trim());S.lt=$('ltxt').innerHTML;save();ltR();st.textContent='Texte inséré dans l\'onglet Lettre.'}}
+catch(x){const m={not_granted:"Autorisation refusée : relancez et acceptez la demande.",rate_limited:"Trop de demandes, patientez un instant.",cancelled:'Annulé.'};st.textContent=m[x&&x.code]||('Échec ('+((x&&x.code)||'erreur')+') : réessayez.');if(x&&x.text)out.textContent=x.text}}
+document.querySelectorAll('[data-ai]').forEach(b=>b.onclick=()=>ai(b.dataset.ai));
+// Suivi
+function apR(){$('apps').innerHTML=S.apps.length?S.apps.map((a,i)=>`<tr><td>${e(a.co)}</td><td>${e(a.po)}</td><td>${e(a.da)}</td><td>${e(a.st)}</td><td>${e(a.re)}</td><td>${e(a.no)}</td><td><button class="btn alt" data-x="${i}" style="margin:0">Supprimer</button></td></tr>`).join(''):'<tr><td colspan="7" class="hint">Ajoutez votre première candidature ci-dessus.</td></tr>'}
+$('addApp').onclick=()=>{if(!$('a1').value)return;S.apps.push({co:$('a1').value,po:$('a2').value,da:$('a3').value,st:$('a4').value,re:$('a5').value,no:$('a6').value});['a1','a2','a3','a5','a6'].forEach(k=>$(k).value='');save();apR()};
+$('apps').onclick=ev=>{if(ev.target.dataset.x){S.apps.splice(+ev.target.dataset.x,1);save();apR()}};
+// Dossier
+function check(){const ok=[[S.lt,'Lettre de motivation'],[S.cv.name,'CV'],[S.sig,'Signature'],[files.some(o=>o.on),'Pièces jointes']];
+$('check').innerHTML=ok.map(o=>`<li><span>${o[1]}</span><span>${o[0]?'Prêt':'Manquant'}</span></li>`).join('')}
+async function pr(parts){let h='';if(parts.includes('lt'))h+=ltHtml();if(parts.includes('cv'))h+=cvHtml();
+if(parts.includes('pj'))for(const o of files.filter(o=>o.on&&/\.(png|jpe?g|webp|gif)$/i.test(o.name)))h+=`<div class="paper" style="display:flex;align-items:center"><img src="${URL.createObjectURL(await getBlob(o))}" style="max-width:100%;max-height:100%;margin:auto" alt=""></div>`;
+$('pr').innerHTML=h;setTimeout(()=>window.print(),100)}
+$('pdfCv').onclick=()=>pr(['cv']);$('pdfLt').onclick=()=>pr(['lt']);$('pdfAll').onclick=()=>pr(['lt','cv','pj']);
+async function dl(name,data){const a=document.createElement('a');a.href=URL.createObjectURL(data);a.download=name;a.click()}
+const page=h=>new Blob([`<meta charset="utf-8"><body>${h}`],{type:'text/html'});
+$('htmlCv').onclick=()=>dl('cv.html',page(cvHtml()));
+$('zipAll').onclick=async()=>{const z=new JSZip();z.file('lettre.html',page(ltHtml()));z.file('cv.html',page(cvHtml()));
+if(S.sig)z.file('signature.png',S.sig.split(',')[1],{base64:true});for(const o of files.filter(o=>o.on))z.file('pieces/'+o.name,await getBlob(o));
+dl('dossier-candidature.zip',await z.generateAsync({type:'blob'}))};
+cvR();ltR();sigR();apR();
+
+})();
+</script></body></html>
