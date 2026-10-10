@@ -1,4 +1,4 @@
-:root {
+<style> :root {
     --bg: #eef1f4;
     --card: #fff;
     --ink: #16202e;
@@ -373,9 +373,13 @@ h2 {
 }
 
 .hd img {
-    width: 70px;
-    height: 70px;
+    width: 76px;
+    height: 76px;
+    min-width: 76px;
+    flex: none;
+    aspect-ratio: 1/1;
     object-fit: cover;
+    object-position: center 25%;
     border-radius: 50%
 }
 
@@ -443,3 +447,45 @@ canvas {
         margin: 0
     }
 }
+
+body:not(.in) header,
+body:not(.in) nav,
+body:not(.in) main {
+    display: none
+}
+
+#auth {
+    display: none;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    padding: 20px
+}
+
+#auth>div {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 24px;
+    width: 100%;
+    max-width: 380px
+}
+
+#amsg {
+    color: var(--acc);
+    font-size: 13px;
+    min-height: 18px
+}
+
+.lnk {
+    background: none;
+    border: 0;
+    color: var(--mut);
+    text-decoration: underline;
+    cursor: pointer;
+    font: inherit;
+    padding: 0;
+    margin-top: 10px
+}
+
+</style>
