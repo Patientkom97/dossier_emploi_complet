@@ -16,7 +16,18 @@
             <label>E-mail</label><input id="aem" type="email" autocomplete="email"><label>Mot de passe</label><input
                 id="apw" type="password" autocomplete="current-password">
             <div class="row"><button class="btn" id="li">Se connecter</button><button class="btn alt" id="su">Créer un
-                    compte</button></div><button class="btn alt" id="gg" style="width:100%">Continuer avec
+                    compte</button></div>
+            <p class="hint" style="margin:14px 0 0">Ou avec votre téléphone</p>
+            <label>Numéro (format international)</label>
+            <input id="aph" type="tel" placeholder="+243812345678" autocomplete="tel">
+            <button class="btn alt" id="sp" style="width:100%">Recevoir un code par SMS</button>
+            <div id="pc" style="display:none">
+                <label>Code reçu</label>
+                <input id="acd" inputmode="numeric" autocomplete="one-time-code" placeholder="123456">
+                <button class="btn" id="vp" style="width:100%">Valider le code</button>
+            </div>
+            <div style="height:10px"></div>
+            <button class="btn alt" id="gg" style="width:100%">Continuer avec
                 Google</button><button class="lnk" id="fg">Mot de passe oublié ?</button>
             <p id="amsg"></p>
         </div>
@@ -203,6 +214,15 @@
                     } catch (x) { msg('Erreur réseau : ' + x.message) }
                 };
                 A('gg').onclick = () => sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: location.origin + location.pathname } });
+                let ph = '';
+                A('sp').onclick = async () => {
+                    ph = A('aph').value.replace(/[\s()-]/g, ''); if (!/^\+\d{8,15}$/.test(ph)) return msg('Entrez le numéro au format international, ex : +243812345678.'); msg('Envoi du code…');
+                    try { const { error } = await sb.auth.signInWithOtp({ phone: ph }); if (error) return msg('Erreur : ' + error.message); A('pc').style.display = 'block'; msg('Code envoyé par SMS. Saisissez-le ci-dessous.') } catch (x) { msg('Erreur réseau : ' + x.message) }
+                };
+                A('vp').onclick = async () => {
+                    const t = A('acd').value.trim(); if (!t) return msg('Saisissez le code reçu.');
+                    try { const { error } = await sb.auth.verifyOtp({ phone: ph, token: t, type: 'sms' }); error ? msg('Code incorrect ou expiré : ' + error.message) : location.reload() } catch (x) { msg('Erreur réseau : ' + x.message) }
+                };
                 A('fg').onclick = async () => { const { error } = await sb.auth.resetPasswordForEmail(A('aem').value.trim(), { redirectTo: location.origin + location.pathname }); msg(error ? error.message : 'E-mail de réinitialisation envoyé.') };
                 return
             }
