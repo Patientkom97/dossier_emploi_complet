@@ -198,6 +198,7 @@
         // CV
         const F = ['name', 'title', 'email', 'phone', 'city', 'summary', 'skills', 'hobbies', 'other'];
         S.cv.xp = S.cv.xp || [{}];
+        const mvB = (a, i) => a.length > 1 ? `<button class="btn alt" data-mv="-1" ${i ? '' : 'disabled'}>↑ Monter</button><button class="btn alt" data-mv="1" ${i < a.length - 1 ? '' : 'disabled'}>↓ Descendre</button>` : '';
         const mois = v => { if (!v) return ''; const [a, m] = v.split('-'); return new Date(a, m - 1).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }) };
         const xpDate = x => [mois(x.d1), x.cur ? "aujourd'hui" : mois(x.d2)].filter(Boolean).join(' – ');
         const expTxt = () => S.cv.xp.map(x => `${x.po || ''}, ${x.co || ''} (${xpDate(x)}) : ${x.tasks || ''}`).join('\n');
@@ -207,7 +208,7 @@
 <div class="row"><div><label>Début</label><input type="month" data-k="d1" value="${e(x.d1)}"></div><div><label>Fin</label><input type="month" data-k="d2" value="${e(x.d2)}" ${x.cur ? 'disabled' : ''}></div></div>
 <label style="font-weight:400"><input type="checkbox" data-k="cur" style="width:auto" ${x.cur ? 'checked' : ''}> Toujours en cours</label>
 <label>Tâches et responsabilités (une par ligne)</label><textarea data-k="tasks">${e(x.tasks)}</textarea>
-${S.cv.xp.length > 1 ? '<button class="btn alt" data-rm="1">Supprimer cette expérience</button>' : ''}</fieldset>`).join('')
+${mvB(S.cv.xp, i)}${S.cv.xp.length > 1 ? '<button class="btn alt" data-rm="1">Supprimer cette expérience</button>' : ''}</fieldset>`).join('')
         }
         $('addXp').onclick = () => { S.cv.xp.push({}); save(); xpR(); cvR() };
         $('xps').oninput = ev => { const k = ev.target.dataset.k; if (!k) return; const x = S.cv.xp[+ev.target.closest('fieldset').dataset.i]; x[k] = k === 'cur' ? ev.target.checked : ev.target.value; save(); if (k === 'cur') xpR(); cvR() };
@@ -222,7 +223,7 @@ ${S.cv.xp.length > 1 ? '<button class="btn alt" data-rm="1">Supprimer cette exp�
 <div class="row"><div><label>Début</label><input type="month" data-k="d1" value="${e(x.d1)}"></div><div><label>Fin</label><input type="month" data-k="d2" value="${e(x.d2)}" ${x.cur ? 'disabled' : ''}></div></div>
 <label style="font-weight:400"><input type="checkbox" data-k="cur" style="width:auto" ${x.cur ? 'checked' : ''}> Toujours en cours</label>
 <label>Option, mention, détails (un point par ligne)</label><textarea data-k="info">${e(x.info)}</textarea>
-${S.cv.ed.length > 1 ? '<button class="btn alt" data-rm="1">Supprimer cette formation</button>' : ''}</fieldset>`).join('')
+${mvB(S.cv.ed, i)}${S.cv.ed.length > 1 ? '<button class="btn alt" data-rm="1">Supprimer cette formation</button>' : ''}</fieldset>`).join('')
         }
         $('addEd').onclick = () => { S.cv.ed.push({}); save(); edR(); cvR() };
         $('eds').oninput = ev => { const k = ev.target.dataset.k; if (!k) return; const x = S.cv.ed[+ev.target.closest('fieldset').dataset.i]; x[k] = k === 'cur' ? ev.target.checked : ev.target.value; save(); if (k === 'cur') edR(); cvR() };
@@ -235,7 +236,7 @@ ${S.cv.ed.length > 1 ? '<button class="btn alt" data-rm="1">Supprimer cette form
             it: { t: 'Compétence', f: [['lo', 'Logiciel ou compétence (Word, Excel, Internet…)', 'i'], ['nv', 'Niveau', 's', NI]] },
             rf: { t: 'Référence', f: [['no', 'Nom et prénom', 'i'], ['fo', 'Fonction', 'i'], ['or', 'Entreprise ou organisation', 'i'], ['te', 'Téléphone', 'i'], ['em', 'E-mail', 'i']] }
         };
-        function lsR(k) { $('b_' + k).innerHTML = S.cv[k].map((x, i) => `<fieldset style="border:1px solid var(--line);border-radius:6px;margin:8px 0;padding:4px 12px 12px" data-i="${i}"><legend>${LS[k].t} ${i + 1}</legend><div class="row">${LS[k].f.map(([f, lb, ty, op]) => ty === 'c' ? `<label style="font-weight:400;flex:1 1 100%"><input type="checkbox" data-k="${f}" style="width:auto" ${x[f] ? 'checked' : ''}> ${lb}</label>` : `<div style="${ty === 't' ? 'flex:1 1 100%' : ''}"><label>${lb}</label>${ty === 't' ? `<textarea data-k="${f}">${e(x[f])}</textarea>` : ty === 's' ? `<select data-k="${f}"><option value=""></option>${op.map(o => `<option ${x[f] === o ? 'selected' : ''}>${o}</option>`).join('')}</select>` : `<input ${ty === 'm' ? 'type="month"' : ''} data-k="${f}" value="${e(x[f])}" ${f === 'd2' && x.cur ? 'disabled' : ''}>`}</div>`).join('')}</div><button class="btn alt" data-rm="1">Supprimer</button></fieldset>`).join('') }
+        function lsR(k) { $('b_' + k).innerHTML = S.cv[k].map((x, i) => `<fieldset style="border:1px solid var(--line);border-radius:6px;margin:8px 0;padding:4px 12px 12px" data-i="${i}"><legend>${LS[k].t} ${i + 1}</legend><div class="row">${LS[k].f.map(([f, lb, ty, op]) => ty === 'c' ? `<label style="font-weight:400;flex:1 1 100%"><input type="checkbox" data-k="${f}" style="width:auto" ${x[f] ? 'checked' : ''}> ${lb}</label>` : `<div style="${ty === 't' ? 'flex:1 1 100%' : ''}"><label>${lb}</label>${ty === 't' ? `<textarea data-k="${f}">${e(x[f])}</textarea>` : ty === 's' ? `<select data-k="${f}"><option value=""></option>${op.map(o => `<option ${x[f] === o ? 'selected' : ''}>${o}</option>`).join('')}</select>` : `<input ${ty === 'm' ? 'type="month"' : ''} data-k="${f}" value="${e(x[f])}" ${f === 'd2' && x.cur ? 'disabled' : ''}>`}</div>`).join('')}</div>${mvB(S.cv[k], i)}<button class="btn alt" data-rm="1">Supprimer</button></fieldset>`).join('') }
         Object.keys(LS).forEach(k => {
             S.cv[k] = S.cv[k] || []; const b = $('b_' + k);
             b.oninput = ev => { const kk = ev.target.dataset.k; if (!kk) return; const x = S.cv[k][+ev.target.closest('fieldset').dataset.i]; x[kk] = ev.target.type === 'checkbox' ? ev.target.checked : ev.target.value; save(); if (kk === 'cur') lsR(k); cvR() };
@@ -253,6 +254,8 @@ ${S.cv.ed.length > 1 ? '<button class="btn alt" data-rm="1">Supprimer cette form
             if (rf.length) h += '<h4>Personnes de référence</h4>' + rf.map(x => `<div class="xp" style="margin-bottom:6px"><b>${e(x.no)}</b>${x.fo ? ', ' + e(x.fo) : ''}${x.or ? ' – ' + e(x.or) : ''}<br>${[x.te && 'Tél : ' + e(x.te), x.em && e(x.em)].filter(Boolean).join(' | ')}</div>`).join('');
             return h
         }
+        const mvI = (a, i, d) => { const j = i + d; if (j < 0 || j >= a.length) return;[a[i], a[j]] = [a[j], a[i]] };
+        [['xps', 'xp', xpR], ['eds', 'ed', edR], ...Object.keys(LS).map(k => ['b_' + k, k, () => lsR(k)])].forEach(([id, k, r]) => $(id).addEventListener('click', ev => { const m = ev.target.dataset.mv; if (!m) return; mvI(S.cv[k], +ev.target.closest('fieldset').dataset.i, +m); save(); r(); cvR() }));
         function pgs() {
             const el = $('cvPrev'); if (!el || !el.clientWidth) return; const ph = el.clientWidth * 273 / 210, n = Math.max(1, Math.ceil((el.offsetHeight - 6) / ph));
             for (let i = 1; i < n; i++) { const d = document.createElement('div'); d.style.cssText = `position:absolute;left:0;right:0;top:${i * ph}px;border-top:2px dashed #e4572e;font-size:9px;color:#e4572e;text-align:right;padding-right:6px`; d.textContent = 'Page ' + (i + 1); el.appendChild(d) }
