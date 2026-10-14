@@ -41,8 +41,21 @@
                     <label>Profil</label><textarea id="summary"></textarea>
                     <label>Expériences professionnelles</label>
                     <div id="xps"></div><button class="btn alt" id="addXp">Ajouter une expérience</button>
-                    <label>Parcours scolaire et formation</label>
-                    <div id="eds"></div><button class="btn alt" id="addEd">Ajouter une formation</button>
+                    <label>Parcours académique (études)</label>
+                    <div id="eds"></div><button class="btn alt" id="addEd">Ajouter un diplôme ou cycle d'études</button>
+                    <label>Formations complémentaires (certificats, stages, formations régulières)</label>
+                    <div id="b_fc"></div><button class="btn alt" id="add_fc">Ajouter une formation
+                        complémentaire</button>
+                    <label>Connaissances linguistiques</label>
+                    <div id="b_lg"></div><button class="btn alt" id="add_lg">Ajouter une langue</button>
+                    <label>Maîtrise informatique</label>
+                    <div id="b_it"></div><button class="btn alt" id="add_it">Ajouter un logiciel ou une
+                        compétence</button>
+                    <label>Centres d'intérêt</label><input id="hobbies" placeholder="Lecture, football, bénévolat…">
+                    <label>Autres informations</label><textarea id="other"
+                        placeholder="Permis de conduire, disponibilité, engagements…"></textarea>
+                    <label>Personnes de référence</label>
+                    <div id="b_rf"></div><button class="btn alt" id="add_rf">Ajouter une personne de référence</button>
                     <label>Compétences (séparées par des virgules)</label><input id="skills">
                     <button class="btn" id="pdfCv">Exporter en PDF</button><button class="btn alt"
                         id="htmlCv">Télécharger en HTML</button>
@@ -183,7 +196,7 @@
         function go(t) { document.querySelectorAll('section').forEach(s => s.classList.toggle('on', s.id === t)); document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b.dataset.t === t)); if (t === 'dp') check() }
         $('nav').onclick = ev => { if (ev.target.dataset.t) go(ev.target.dataset.t) }; go('cv');
         // CV
-        const F = ['name', 'title', 'email', 'phone', 'city', 'summary', 'skills'];
+        const F = ['name', 'title', 'email', 'phone', 'city', 'summary', 'skills', 'hobbies', 'other'];
         S.cv.xp = S.cv.xp || [{}];
         const mois = v => { if (!v) return ''; const [a, m] = v.split('-'); return new Date(a, m - 1).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }) };
         const xpDate = x => [mois(x.d1), x.cur ? "aujourd'hui" : mois(x.d2)].filter(Boolean).join(' – ');
@@ -204,7 +217,7 @@ ${S.cv.xp.length > 1 ? '<button class="btn alt" data-rm="1">Supprimer cette exp�
         const edDate = x => [mois(x.d1), x.cur ? 'en cours' : mois(x.d2)].filter(Boolean).join(' – ');
         const edTxt = () => S.cv.ed.map(x => `${x.di || ''}, ${x.et || ''} (${edDate(x)}) ${x.info || ''}`).join('\n');
         function edR() {
-            $('eds').innerHTML = S.cv.ed.map((x, i) => `<fieldset style="border:1px solid var(--line);border-radius:6px;margin:8px 0;padding:4px 12px 12px" data-i="${i}"><legend>Formation ${i + 1}</legend>
+            $('eds').innerHTML = S.cv.ed.map((x, i) => `<fieldset style="border:1px solid var(--line);border-radius:6px;margin:8px 0;padding:4px 12px 12px" data-i="${i}"><legend>Études ${i + 1}</legend>
 <div class="row"><div><label>Diplôme, niveau ou classe</label><input data-k="di" value="${e(x.di)}" placeholder="Licence en Sciences Commerciales"></div><div><label>Établissement</label><input data-k="et" value="${e(x.et)}"></div></div>
 <div class="row"><div><label>Début</label><input type="month" data-k="d1" value="${e(x.d1)}"></div><div><label>Fin</label><input type="month" data-k="d2" value="${e(x.d2)}" ${x.cur ? 'disabled' : ''}></div></div>
 <label style="font-weight:400"><input type="checkbox" data-k="cur" style="width:auto" ${x.cur ? 'checked' : ''}> Toujours en cours</label>
@@ -215,6 +228,31 @@ ${S.cv.ed.length > 1 ? '<button class="btn alt" data-rm="1">Supprimer cette form
         $('eds').oninput = ev => { const k = ev.target.dataset.k; if (!k) return; const x = S.cv.ed[+ev.target.closest('fieldset').dataset.i]; x[k] = k === 'cur' ? ev.target.checked : ev.target.value; save(); if (k === 'cur') edR(); cvR() };
         $('eds').onclick = ev => { if (ev.target.dataset.rm) { S.cv.ed.splice(+ev.target.closest('fieldset').dataset.i, 1); save(); edR(); cvR() } };
         edR();
+        const NV = ['Langue maternelle', 'Courant', 'Bon', 'Intermédiaire', 'Notions'], NI = ['Excellent', 'Bon', 'Moyen', 'Notions'];
+        const LS = {
+            fc: { t: 'Formation', f: [['di', 'Intitulé de la formation', 'i'], ['et', 'Organisme', 'i'], ['d1', 'Début', 'm'], ['d2', 'Fin', 'm'], ['cur', 'Toujours en cours', 'c'], ['info', 'Détails (un point par ligne)', 't']] },
+            lg: { t: 'Langue', f: [['la', 'Langue', 'i'], ['nv', 'Niveau', 's', NV]] },
+            it: { t: 'Compétence', f: [['lo', 'Logiciel ou compétence (Word, Excel, Internet…)', 'i'], ['nv', 'Niveau', 's', NI]] },
+            rf: { t: 'Référence', f: [['no', 'Nom et prénom', 'i'], ['fo', 'Fonction', 'i'], ['or', 'Entreprise ou organisation', 'i'], ['te', 'Téléphone', 'i'], ['em', 'E-mail', 'i']] }
+        };
+        function lsR(k) { $('b_' + k).innerHTML = S.cv[k].map((x, i) => `<fieldset style="border:1px solid var(--line);border-radius:6px;margin:8px 0;padding:4px 12px 12px" data-i="${i}"><legend>${LS[k].t} ${i + 1}</legend><div class="row">${LS[k].f.map(([f, lb, ty, op]) => ty === 'c' ? `<label style="font-weight:400;flex:1 1 100%"><input type="checkbox" data-k="${f}" style="width:auto" ${x[f] ? 'checked' : ''}> ${lb}</label>` : `<div style="${ty === 't' ? 'flex:1 1 100%' : ''}"><label>${lb}</label>${ty === 't' ? `<textarea data-k="${f}">${e(x[f])}</textarea>` : ty === 's' ? `<select data-k="${f}"><option value=""></option>${op.map(o => `<option ${x[f] === o ? 'selected' : ''}>${o}</option>`).join('')}</select>` : `<input ${ty === 'm' ? 'type="month"' : ''} data-k="${f}" value="${e(x[f])}" ${f === 'd2' && x.cur ? 'disabled' : ''}>`}</div>`).join('')}</div><button class="btn alt" data-rm="1">Supprimer</button></fieldset>`).join('') }
+        Object.keys(LS).forEach(k => {
+            S.cv[k] = S.cv[k] || []; const b = $('b_' + k);
+            b.oninput = ev => { const kk = ev.target.dataset.k; if (!kk) return; const x = S.cv[k][+ev.target.closest('fieldset').dataset.i]; x[kk] = ev.target.type === 'checkbox' ? ev.target.checked : ev.target.value; save(); if (kk === 'cur') lsR(k); cvR() };
+            b.onclick = ev => { if (ev.target.dataset.rm) { S.cv[k].splice(+ev.target.closest('fieldset').dataset.i, 1); save(); lsR(k); cvR() } };
+            $('add_' + k).onclick = () => { S.cv[k].push({}); save(); lsR(k); cvR() }; lsR(k)
+        });
+        const bul = t => t ? `<ul style="margin:3px 0 0;padding-left:16px">${t.split('\n').filter(l => l.trim()).map(l => `<li>${e(l.replace(/^[-•*]\s*/, ''))}</li>`).join('')}</ul>` : '';
+        function extra(c) {
+            const A = k => (c[k] || []).filter(x => Object.values(x).some(v => v && v !== true)); const fc = A('fc'), lg = A('lg'), it = A('it'), rf = A('rf'); let h = '';
+            if (fc.length) h += '<h4>Formations complémentaires</h4>' + fc.map(x => `<div class="xp" style="margin-bottom:8px"><b>${e(x.di)}</b>${x.di && x.et ? ' – ' : ''}${e(x.et)}<div class="sub" style="font-size:10px">${e(edDate(x))}</div>${bul(x.info)}</div>`).join('');
+            if (lg.length) h += '<h4>Connaissances linguistiques</h4>' + lg.map(x => `<span class="chip">${e(x.la)}${x.nv ? ' : ' + e(x.nv) : ''}</span>`).join('');
+            if (it.length) h += '<h4>Maîtrise informatique</h4>' + it.map(x => `<span class="chip">${e(x.lo)}${x.nv ? ' : ' + e(x.nv) : ''}</span>`).join('');
+            if (c.hobbies) h += `<h4>Centres d'intérêt</h4>${e(c.hobbies)}`;
+            if (c.other) h += `<h4>Autres informations</h4>${br(c.other)}`;
+            if (rf.length) h += '<h4>Personnes de référence</h4>' + rf.map(x => `<div class="xp" style="margin-bottom:6px"><b>${e(x.no)}</b>${x.fo ? ', ' + e(x.fo) : ''}${x.or ? ' – ' + e(x.or) : ''}<br>${[x.te && 'Tél : ' + e(x.te), x.em && e(x.em)].filter(Boolean).join(' | ')}</div>`).join('');
+            return h
+        }
         function pgs() {
             const el = $('cvPrev'); if (!el || !el.clientWidth) return; const ph = el.clientWidth * 273 / 210, n = Math.max(1, Math.ceil((el.offsetHeight - 6) / ph));
             for (let i = 1; i < n; i++) { const d = document.createElement('div'); d.style.cssText = `position:absolute;left:0;right:0;top:${i * ph}px;border-top:2px dashed #e4572e;font-size:9px;color:#e4572e;text-align:right;padding-right:6px`; d.textContent = 'Page ' + (i + 1); el.appendChild(d) }
@@ -226,8 +264,8 @@ ${S.cv.ed.length > 1 ? '<button class="btn alt" data-rm="1">Supprimer cette form
         function rd(f, cb) { if (!f) return; const r = new FileReader(); r.onload = () => cb(r.result); r.readAsDataURL(f) }
         function cvHtml(t) {
             const c = S.cv; return `<div class="paper ${t || c.tpl || 't1'}"><div class="hd">${c.photo ? `<img src="${c.photo}" alt="">` : ''}<div><h3>${e(c.name) || 'Votre nom'}</h3><div class="sub">${e(c.title)}</div><div class="sub">${[c.email, c.phone, c.city].filter(Boolean).map(e).join(' | ')}</div></div></div>
-${c.summary ? `<h4>Profil</h4>${br(c.summary)}` : ''}${c.xp.some(x => x.po || x.co) ? `<h4>Expériences</h4>${c.xp.filter(x => x.po || x.co).map(x => `<div class="xp" style="margin-bottom:8px"><b>${e(x.po)}</b>${x.po && x.co ? ' – ' : ''}${e(x.co)}<div class="sub" style="font-size:10px">${e(xpDate(x))}</div>${x.tasks ? `<ul style="margin:3px 0 0;padding-left:16px">${x.tasks.split('\n').filter(t => t.trim()).map(t => `<li>${e(t.replace(/^[-•*]\s*/, ''))}</li>`).join('')}</ul>` : ''}</div>`).join('')}` : ''}${(c.ed || []).some(x => x.di || x.et) ? `<h4>Parcours scolaire et formation</h4>${c.ed.filter(x => x.di || x.et).map(x => `<div class="xp" style="margin-bottom:8px"><b>${e(x.di)}</b>${x.di && x.et ? ' – ' : ''}${e(x.et)}<div class="sub" style="font-size:10px">${e(edDate(x))}</div>${x.info ? `<ul style="margin:3px 0 0;padding-left:16px">${x.info.split('\n').filter(t => t.trim()).map(t => `<li>${e(t.replace(/^[-•*]\s*/, ''))}</li>`).join('')}</ul>` : ''}</div>`).join('')}` : ''}
-${c.skills ? `<h4>Compétences</h4>${c.skills.split(',').filter(s => s.trim()).map(s => `<span class="chip">${e(s.trim())}</span>`).join('')}` : ''}</div>`
+${c.summary ? `<h4>Profil</h4>${br(c.summary)}` : ''}${c.xp.some(x => x.po || x.co) ? `<h4>Expériences</h4>${c.xp.filter(x => x.po || x.co).map(x => `<div class="xp" style="margin-bottom:8px"><b>${e(x.po)}</b>${x.po && x.co ? ' – ' : ''}${e(x.co)}<div class="sub" style="font-size:10px">${e(xpDate(x))}</div>${x.tasks ? `<ul style="margin:3px 0 0;padding-left:16px">${x.tasks.split('\n').filter(t => t.trim()).map(t => `<li>${e(t.replace(/^[-•*]\s*/, ''))}</li>`).join('')}</ul>` : ''}</div>`).join('')}` : ''}${(c.ed || []).some(x => x.di || x.et) ? `<h4>Parcours académique</h4>${c.ed.filter(x => x.di || x.et).map(x => `<div class="xp" style="margin-bottom:8px"><b>${e(x.di)}</b>${x.di && x.et ? ' – ' : ''}${e(x.et)}<div class="sub" style="font-size:10px">${e(edDate(x))}</div>${x.info ? `<ul style="margin:3px 0 0;padding-left:16px">${x.info.split('\n').filter(t => t.trim()).map(t => `<li>${e(t.replace(/^[-•*]\s*/, ''))}</li>`).join('')}</ul>` : ''}</div>`).join('')}` : ''}
+${c.skills ? `<h4>Compétences</h4>${c.skills.split(',').filter(s => s.trim()).map(s => `<span class="chip">${e(s.trim())}</span>`).join('')}` : ''}${extra(c)}</div>`
         }
         const TPL = [['t1', 'Classique'], ['t2', 'Moderne'], ['t3', 'Sobre'], ['t4', 'Marine'], ['t5', 'Minimal'], ['t6', 'Corail']];
         function galR() { $('gal').innerHTML = TPL.map(t => `<button data-t="${t[0]}" class="${(S.cv.tpl || 't1') === t[0] ? 'on' : ''}"><div class="th"><div>${cvHtml(t[0])}</div></div>${t[1]}</button>`).join('') }
@@ -275,7 +313,7 @@ ${c.skills ? `<h4>Compétences</h4>${c.skills.split(',').filter(s => s.trim()).m
             st.textContent = "Connexion à l'assistant… (autorisez la demande si une fenêtre apparaît)"; out.textContent = '';
             let sm = null; try { sm = await window.claude.use('sample') } catch (x) { }
             if (!sm) { st.textContent = "L'assistant IA n'est disponible que dans la page publiée ouverte depuis claude.ai, avec un compte connecté."; return }
-            const c = S.cv, prof = `CV : ${c.name || ''}, ${c.title || ''}. Profil : ${c.summary || ''}. Expériences : ${expTxt()}. Formation : ${edTxt()}. Compétences : ${c.skills || ''}.`;
+            const c = S.cv, prof = `CV : ${c.name || ''}, ${c.title || ''}. Profil : ${c.summary || ''}. Expériences : ${expTxt()}. Formation : ${edTxt()}. Compétences : ${c.skills || ''}. Langues : ${(c.lg || []).map(x => x.la + ' ' + (x.nv || '')).join(', ')}. Informatique : ${(c.it || []).map(x => x.lo).join(', ')}.`;
             let p;
             if (kind === 'cv') p = `Offre d'emploi :\n${o}\n\n${prof}\n\nDonne 6 suggestions concrètes en français pour adapter ce CV à l'offre (mots-clés à reprendre, expériences à mettre en avant, points à ajouter). Texte simple, une suggestion par ligne.`;
             else if (kind === 'lt') p = `Offre d'emploi :\n${o}\n\n${prof}\n\nRédige en français une lettre de motivation ciblée, 250 mots maximum. Pas d'en-tête, pas d'objet : commence par la formule d'appel et termine par la formule de politesse. Texte seul.`;
