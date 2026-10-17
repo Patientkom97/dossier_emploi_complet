@@ -496,3 +496,15 @@
             font-size: 13px;
             padding: 18px 20px 30px
         }
+
+        #tools {
+            float: right;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap
+        }
+
+        #tools select {
+            width: auto;
+            padding: 6px 8px
+        }

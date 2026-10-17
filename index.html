@@ -10,6 +10,16 @@
 
 <body>
     <header>
+        <div id="tools"><select id="thm" aria-label="Thème">
+                <option value="auto">Thème : auto</option>
+                <option value="light">Clair</option>
+                <option value="dark">Sombre</option>
+            </select><select id="acc" aria-label="Couleur">
+                <option value="vert">Vert</option>
+                <option value="bleu">Bleu</option>
+                <option value="violet">Violet</option>
+                <option value="orange">Orange</option>
+            </select></div>
         <h1>Dossier Emploi</h1>
         <p>CV, lettre, signature, pièces et suivi au même endroit.</p>
     </header>
@@ -139,15 +149,6 @@
             <ul class="files" id="fileList"></ul>
         </section>
 
-        <section id="ia">
-            <h2>Assistant IA</h2>
-            <label>Offre d'emploi (collez le texte)</label><textarea id="offer" style="min-height:160px"></textarea>
-            <button class="btn" data-ai="cv">Conseils pour adapter mon CV</button><button class="btn"
-                data-ai="lt">Rédiger la lettre ciblée</button><button class="btn alt" data-ai="fix">Corriger et
-                améliorer ma lettre</button>
-            <p class="hint" id="aiSt"></p>
-            <div id="aiOut" style="white-space:pre-wrap"></div>
-        </section>
 
         <section id="sv">
             <h2>Suivi des candidatures</h2>
@@ -196,7 +197,7 @@
         try { const r = localStorage.getItem('de'); if (r) S = Object.assign(S, JSON.parse(r)) } catch (x) { }
         const save = () => { try { localStorage.setItem('de', JSON.stringify(S)) } catch (x) { } };
         // onglets
-        const tabs = [['cv', 'CV'], ['lt', 'Lettre'], ['sg', 'Signature'], ['pj', 'Pièces'], ['ia', 'Assistant IA'], ['sv', 'Suivi'], ['dp', 'Dossier']];
+        const tabs = [['cv', 'CV'], ['lt', 'Lettre'], ['sg', 'Signature'], ['pj', 'Pièces'], ['sv', 'Suivi'], ['dp', 'Dossier']];
         $('nav').innerHTML = tabs.map(t => `<button data-t="${t[0]}">${t[1]}</button>`).join('');
         function go(t) { document.querySelectorAll('section').forEach(s => s.classList.toggle('on', s.id === t)); document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b.dataset.t === t)); if (t === 'dp') check() }
         $('nav').onclick = ev => { if (ev.target.dataset.t) go(ev.target.dataset.t) }; go('cv');
@@ -322,29 +323,6 @@ ${c.skills ? `<h4>Compétences</h4>${c.skills.split(',').filter(s => s.trim()).m
         $('fileList').onclick = ev => { const d = ev.target.dataset.d; if (d !== undefined) { files.splice(+d, 1); fl() } };
         $('fileList').onchange = ev => { files[+ev.target.dataset.i].on = ev.target.checked }; fl();
         // IA
-        let aiCtl = null;
-        async function ai(kind) {
-            const st = $('aiSt'), out = $('aiOut'); const o = $('offer').value.trim();
-            if (kind !== 'fix' && !o) { st.textContent = "Collez d'abord le texte de l'offre d'emploi."; return }
-            if (kind === 'fix' && !$('ltxt').innerText.trim()) { st.textContent = "Écrivez d'abord votre lettre dans l'onglet Lettre."; return }
-            st.textContent = "Connexion à l'assistant… (autorisez la demande si une fenêtre apparaît)"; out.textContent = '';
-            let sm = null; try { sm = await window.claude.use('sample') } catch (x) { }
-            if (!sm) { st.textContent = "L'assistant IA n'est disponible que dans la page publiée ouverte depuis claude.ai, avec un compte connecté."; return }
-            const c = S.cv, prof = `CV : ${c.name || ''}, ${c.title || ''}. Profil : ${c.summary || ''}. Expériences : ${expTxt()}. Formation : ${edTxt()}. Compétences : ${c.skills || ''}. Langues : ${(c.lg || []).map(x => x.la + ' ' + (x.nv || '')).join(', ')}. Informatique : ${(c.it || []).map(x => x.lo).join(', ')}.`;
-            let p;
-            if (kind === 'cv') p = `Offre d'emploi :\n${o}\n\n${prof}\n\nDonne 6 suggestions concrètes en français pour adapter ce CV à l'offre (mots-clés à reprendre, expériences à mettre en avant, points à ajouter). Texte simple, une suggestion par ligne.`;
-            else if (kind === 'lt') p = `Offre d'emploi :\n${o}\n\n${prof}\n\nRédige en français une lettre de motivation ciblée, 250 mots maximum. Pas d'en-tête, pas d'objet : commence par la formule d'appel et termine par la formule de politesse. Texte seul.`;
-            else p = `Corrige les fautes et améliore le style de cette lettre sans changer le sens. Réponds avec le texte corrigé seul :\n\n${$('ltxt').innerText}`;
-            st.textContent = 'Réflexion en cours…'; aiCtl = new AbortController();
-            try {
-                const r = await sm(p, { signal: aiCtl.signal, cache: false, modelTier: 'default', onText: x => { st.textContent = 'Rédaction en cours…'; out.textContent = x.text } });
-                out.textContent = r.text;
-                if (kind === 'cv') st.textContent = 'Suggestions prêtes.';
-                else { $('ltxt').innerHTML = br(r.text.trim()); S.lt = $('ltxt').innerHTML; save(); ltR(); st.textContent = 'Texte inséré dans l\'onglet Lettre.' }
-            }
-            catch (x) { const m = { not_granted: "Autorisation refusée : relancez et acceptez la demande.", rate_limited: "Trop de demandes, patientez un instant.", cancelled: 'Annulé.' }; st.textContent = m[x && x.code] || ('Échec (' + ((x && x.code) || 'erreur') + ') : réessayez.'); if (x && x.text) out.textContent = x.text }
-        }
-        document.querySelectorAll('[data-ai]').forEach(b => b.onclick = () => ai(b.dataset.ai));
         // Suivi
         function apR() { $('apps').innerHTML = S.apps.length ? S.apps.map((a, i) => `<tr><td>${e(a.co)}</td><td>${e(a.po)}</td><td>${e(a.da)}</td><td>${e(a.st)}</td><td>${e(a.re)}</td><td>${e(a.no)}</td><td><button class="btn alt" data-x="${i}" style="margin:0">Supprimer</button></td></tr>`).join('') : '<tr><td colspan="7" class="hint">Ajoutez votre première candidature ci-dessus.</td></tr>' }
         $('addApp').onclick = () => { if (!$('a1').value) return; S.apps.push({ co: $('a1').value, po: $('a2').value, da: $('a3').value, st: $('a4').value, re: $('a5').value, no: $('a6').value });['a1', 'a2', 'a3', 'a5', 'a6'].forEach(k => $(k).value = ''); save(); apR() };
@@ -369,7 +347,18 @@ ${c.skills ? `<h4>Compétences</h4>${c.skills.split(',').filter(s => s.trim()).m
             dl('dossier-candidature.zip', await z.generateAsync({ type: 'blob' }))
         };
         cvR(); ltR(); sigR(); apR();
+        const PAL = { vert: [['#0f6b5c', '#d9efe9', '#ffffff'], ['#4cc2ab', '#1c3a35', '#0c1a17']], bleu: [['#1d5fd1', '#dbe7fb', '#ffffff'], ['#6ea0ff', '#1b2a4a', '#0b1424']], violet: [['#6b3fc4', '#e8defa', '#ffffff'], ['#b39bff', '#2c2147', '#150f26']], orange: [['#c2570c', '#fbe5d3', '#ffffff'], ['#ffa05c', '#43281a', '#241208']] };
+        function applyTheme() {
+            let t = 'auto', a = 'vert'; try { t = localStorage.getItem('de_th') || 'auto'; a = localStorage.getItem('de_ac') || 'vert' } catch (x) { }
+            const r = document.documentElement, dk = t === 'dark' || (t === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
+            t === 'auto' ? r.removeAttribute('data-theme') : r.setAttribute('data-theme', t); r.style.colorScheme = t === 'auto' ? 'light dark' : t;
+            const [c, so, on] = PAL[a][dk ? 1 : 0]; r.style.setProperty('--acc', c); r.style.setProperty('--soft', so); r.style.setProperty('--on', on); $('thm').value = t; $('acc').value = a
+        }
+        $('thm').onchange = () => { try { localStorage.setItem('de_th', $('thm').value) } catch (x) { } applyTheme() };
+        $('acc').onchange = () => { try { localStorage.setItem('de_ac', $('acc').value) } catch (x) { } applyTheme() };
+        matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme); applyTheme();
     </script>
 </body>
+
 
 </html>
