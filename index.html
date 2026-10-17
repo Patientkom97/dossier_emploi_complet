@@ -150,34 +150,6 @@
         </section>
 
 
-        <section id="sv">
-            <h2>Suivi des candidatures</h2>
-            <div class="row"><input id="a1" placeholder="Entreprise"><input id="a2" placeholder="Poste"><input id="a3"
-                    type="date" title="Date d'envoi"><select id="a4">
-                    <option>Envoyée</option>
-                    <option>En attente</option>
-                    <option>Entretien</option>
-                    <option>Refusée</option>
-                    <option>Acceptée</option>
-                </select><input id="a5" type="date" title="Date de relance"><input id="a6" placeholder="Notes"></div>
-            <button class="btn" id="addApp">Ajouter la candidature</button>
-            <div style="overflow-x:auto">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Entreprise</th>
-                            <th>Poste</th>
-                            <th>Envoi</th>
-                            <th>Statut</th>
-                            <th>Relance</th>
-                            <th>Notes</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody id="apps"></tbody>
-                </table>
-            </div>
-        </section>
 
         <section id="dp">
             <h2>Dossier complet</h2>
@@ -197,7 +169,7 @@
         try { const r = localStorage.getItem('de'); if (r) S = Object.assign(S, JSON.parse(r)) } catch (x) { }
         const save = () => { try { localStorage.setItem('de', JSON.stringify(S)) } catch (x) { } };
         // onglets
-        const tabs = [['cv', 'CV'], ['lt', 'Lettre'], ['sg', 'Signature'], ['pj', 'Pièces'], ['sv', 'Suivi'], ['dp', 'Dossier']];
+        const tabs = [['cv', 'CV'], ['lt', 'Lettre'], ['sg', 'Signature'], ['pj', 'Pièces'], ['dp', 'Dossier']];
         $('nav').innerHTML = tabs.map(t => `<button data-t="${t[0]}">${t[1]}</button>`).join('');
         function go(t) { document.querySelectorAll('section').forEach(s => s.classList.toggle('on', s.id === t)); document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b.dataset.t === t)); if (t === 'dp') check() }
         $('nav').onclick = ev => { if (ev.target.dataset.t) go(ev.target.dataset.t) }; go('cv');
@@ -323,10 +295,6 @@ ${c.skills ? `<h4>Compétences</h4>${c.skills.split(',').filter(s => s.trim()).m
         $('fileList').onclick = ev => { const d = ev.target.dataset.d; if (d !== undefined) { files.splice(+d, 1); fl() } };
         $('fileList').onchange = ev => { files[+ev.target.dataset.i].on = ev.target.checked }; fl();
         // IA
-        // Suivi
-        function apR() { $('apps').innerHTML = S.apps.length ? S.apps.map((a, i) => `<tr><td>${e(a.co)}</td><td>${e(a.po)}</td><td>${e(a.da)}</td><td>${e(a.st)}</td><td>${e(a.re)}</td><td>${e(a.no)}</td><td><button class="btn alt" data-x="${i}" style="margin:0">Supprimer</button></td></tr>`).join('') : '<tr><td colspan="7" class="hint">Ajoutez votre première candidature ci-dessus.</td></tr>' }
-        $('addApp').onclick = () => { if (!$('a1').value) return; S.apps.push({ co: $('a1').value, po: $('a2').value, da: $('a3').value, st: $('a4').value, re: $('a5').value, no: $('a6').value });['a1', 'a2', 'a3', 'a5', 'a6'].forEach(k => $(k).value = ''); save(); apR() };
-        $('apps').onclick = ev => { if (ev.target.dataset.x) { S.apps.splice(+ev.target.dataset.x, 1); save(); apR() } };
         // Dossier
         function check() {
             const ok = [[S.lt, 'Lettre de motivation'], [S.cv.name, 'CV'], [S.sig, 'Signature'], [files.some(o => o.on), 'Pièces jointes']];
@@ -346,7 +314,7 @@ ${c.skills ? `<h4>Compétences</h4>${c.skills.split(',').filter(s => s.trim()).m
             if (S.sig) z.file('signature.png', S.sig.split(',')[1], { base64: true }); files.filter(o => o.on).forEach(o => z.file('pieces/' + o.f.name, o.f));
             dl('dossier-candidature.zip', await z.generateAsync({ type: 'blob' }))
         };
-        cvR(); ltR(); sigR(); apR();
+        cvR(); ltR(); sigR();
         const PAL = { vert: [['#0f6b5c', '#d9efe9', '#ffffff'], ['#4cc2ab', '#1c3a35', '#0c1a17']], bleu: [['#1d5fd1', '#dbe7fb', '#ffffff'], ['#6ea0ff', '#1b2a4a', '#0b1424']], violet: [['#6b3fc4', '#e8defa', '#ffffff'], ['#b39bff', '#2c2147', '#150f26']], orange: [['#c2570c', '#fbe5d3', '#ffffff'], ['#ffa05c', '#43281a', '#241208']] };
         function applyTheme() {
             let t = 'auto', a = 'vert'; try { t = localStorage.getItem('de_th') || 'auto'; a = localStorage.getItem('de_ac') || 'vert' } catch (x) { }
