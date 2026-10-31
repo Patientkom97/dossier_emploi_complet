@@ -508,3 +508,44 @@ footer {
     width: auto;
     padding: 6px 8px
 }
+
+body:not(.in) header,
+body:not(.in) nav,
+body:not(.in) main {
+    display: none
+}
+
+#auth {
+    display: none;
+    min-height: 80vh;
+    align-items: center;
+    justify-content: center;
+    padding: 20px
+}
+
+#auth>div {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 24px;
+    width: 100%;
+    max-width: 380px
+}
+
+#amsg {
+    color: var(--acc);
+    font-weight: 600;
+    font-size: 13px;
+    min-height: 18px
+}
+
+.lnk {
+    background: none;
+    border: 0;
+    color: var(--mut);
+    text-decoration: underline;
+    cursor: pointer;
+    font: inherit;
+    padding: 0;
+    margin-top: 10px
+}

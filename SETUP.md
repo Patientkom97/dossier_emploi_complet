@@ -1,46 +1,21 @@
-# Dossier Emploi (version cloud) : mise en route
+# Dossier Emploi : structure et mise en route
 
-## 1. Projet Supabase (gratuit)
-1. Créez un compte sur supabase.com puis un nouveau projet.
-2. Dans **Project Settings > API**, copiez l'URL du projet et la clé `anon public`.
-3. Ouvrez `index.html` et remplacez `SB_URL` et `SB_KEY` en haut du script.
+## Fichiers
+- `index.html` : structure de la page
+- `css/style.css` : mise en forme
+- `js/config.js` : adresse et clé publique Supabase
+- `js/auth.js` : connexion (e-mail, Google, Apple)
+- `js/app.js` : CV, lettre, signature, pièces, suivi, dossier
 
-## 2. Base de données et stockage
-Dans **SQL Editor**, exécutez :
+Déposer TOUS ces éléments (index.html + dossiers css et js) à la racine du dépôt GitHub Pages.
 
-```sql
-create table dossiers(
-  user_id uuid primary key references auth.users on delete cascade,
-  data jsonb not null default '{}',
-  updated_at timestamptz default now());
-alter table dossiers enable row level security;
-create policy "dossier perso" on dossiers for all
-  using (auth.uid()=user_id) with check (auth.uid()=user_id);
+## Mémoire
+Les données sont enregistrées à chaque modification : dans le navigateur (affichage immédiat au retour)
+et dans le compte Supabase (synchronisation téléphone / ordinateur). La version la plus récente est reprise.
+L'application rouvre aussi le dernier onglet utilisé.
 
-insert into storage.buckets(id,name,public) values('pieces','pieces',false);
-create policy "pieces perso" on storage.objects for all
-  using (bucket_id='pieces' and (storage.foldername(name))[1]=auth.uid()::text)
-  with check (bucket_id='pieces' and (storage.foldername(name))[1]=auth.uid()::text);
-```
-Chaque utilisateur ne voit que ses propres données et fichiers.
-
-## 3. Connexion e-mail et Google
-- **Authentication > Providers > Email** : activé par défaut.
-- **Google** : créez un identifiant OAuth « Application Web » dans Google Cloud Console. Ajoutez comme URI de redirection l'URL `https://VOTRE-PROJET.supabase.co/auth/v1/callback`. Collez l'ID client et le secret dans **Providers > Google**.
-- **Authentication > URL Configuration** : ajoutez l'adresse de votre site (Site URL et Redirect URLs).
-
-## 4. Assistant IA (clé protégée côté serveur)
-```
-npm i -g supabase
-supabase login
-supabase link --project-ref VOTRE-REF
-supabase secrets set ANTHROPIC_API_KEY=sk-ant-...
-supabase functions deploy assistant
-```
-
-## 5. Mise en ligne
-Déposez le dossier sur Netlify, Vercel ou Cloudflare Pages (fichier statique `index.html`). Pour tester en local : `npx serve .`
-
-## Limites actuelles
-- La synchronisation se fait à l'ouverture de la page : rechargez sur l'autre appareil pour voir les changements.
-- L'export Word et le portfolio avec QR code ne sont pas encore faits.
+## Supabase
+Table `dossiers` et espace `pieces` : voir le SQL déjà exécuté (policies par utilisateur).
+Authentication > URL Configuration : Site URL = https://patientkom97.github.io/dossier_emploi_complet/
+Redirect URLs = https://patientkom97.github.io/**
+Google et Apple : Authentication > Sign In / Providers (Apple demande un compte Apple Developer payant).
