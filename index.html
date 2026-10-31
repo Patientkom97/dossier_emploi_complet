@@ -1,229 +1,89 @@
 <!doctype html>
-<html lang="fr">
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dossier Emploi</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0f6b5c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Dossier Emploi">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/style.css"></head><body>
+<div id="auth"><div><h1>Dossier Emploi</h1><p class="hint">Connectez-vous pour retrouver votre dossier sur tous vos appareils.</p><label>E-mail</label><input id="aem" type="email" autocomplete="email"><label>Mot de passe</label><input id="apw" type="password" autocomplete="current-password"><div class="row"><button class="btn" id="li">Se connecter</button><button class="btn alt" id="su">Créer un compte</button></div><p id="amsg"></p><button class="btn alt" id="gg" style="width:100%">Continuer avec Google</button><button class="btn alt" id="ap" style="width:100%">Continuer avec Apple</button><button class="lnk" id="fg">Mot de passe oublié ?</button></div></div>
+<header><div id="tools"><select id="thm" aria-label="Thème"><option value="auto">Thème : auto</option><option value="light">Clair</option><option value="dark">Sombre</option></select><select id="acc" aria-label="Couleur"><option value="vert">Vert</option><option value="bleu">Bleu</option><option value="violet">Violet</option><option value="orange">Orange</option></select><button class="btn" id="inst" style="display:none;margin:0;padding:6px 10px">Installer l'application</button><span id="sav" class="hint" style="align-self:center;margin:0"></span><span id="who" class="hint" style="align-self:center;margin:0"></span><button class="btn alt" id="out" style="margin:0;padding:6px 10px">Se déconnecter</button></div><h1>Dossier Emploi</h1><p>CV, lettre, signature, pièces et suivi au même endroit.</p></header>
+<nav id="nav"></nav>
+<main>
+<section id="cv"><div class="two"><div>
+<h2>CV</h2>
+<div class="row" style="align-items:center;margin-bottom:6px"><button class="btn" id="impBtn" style="flex:none;margin:0">Importer un ancien CV</button><input type="file" id="impFile" accept=".pdf,.docx,.txt" style="display:none"><span class="hint" id="impMsg" style="margin:0"></span></div>
+<p class="hint" style="margin-top:0">Formats : PDF (texte), Word (.docx) ou TXT. Les rubriques reconnues remplissent le formulaire : vérifiez-les ensuite.</p>
+<label>Modèle</label><select id="tpl"><option value="t1">Classique</option><option value="t2">Moderne</option><option value="t3">Sobre</option><option value="t4">Marine</option><option value="t5">Minimal</option><option value="t6">Corail</option></select>
+<label>Marges gauche et droite : <span id="mxv">17</span> mm</label><input type="range" id="mx" min="8" max="30" value="17">
+<div class="row"><div><label>Nom complet</label><input id="name"></div><div><label>Poste visé</label><input id="title"></div></div>
+<div class="row"><div><label>E-mail</label><input id="email"></div><div><label>Téléphone</label><input id="phone"></div><div><label>Ville</label><input id="city"></div></div>
+<label>Photo</label><input type="file" id="photo" accept="image/*">
+<label>Profil</label><textarea id="summary"></textarea>
+<label>Expériences professionnelles</label><div id="xps"></div><button class="btn alt" id="addXp">Ajouter une expérience</button>
+<label>Parcours académique (études)</label><div id="eds"></div><button class="btn alt" id="addEd">Ajouter un diplôme ou cycle d'études</button>
+<label>Formations complémentaires (certificats, stages, formations régulières)</label><div id="b_fc"></div><button class="btn alt" id="add_fc">Ajouter une formation complémentaire</button>
+<label>Connaissances linguistiques</label><div id="b_lg"></div><button class="btn alt" id="add_lg">Ajouter une langue</button>
+<label>Maîtrise informatique</label><div id="b_it"></div><button class="btn alt" id="add_it">Ajouter un logiciel ou une compétence</button>
+<label>Centres d'intérêt</label><input id="hobbies" placeholder="Lecture, football, bénévolat…">
+<label>Autres informations</label><textarea id="other" placeholder="Permis de conduire, disponibilité, engagements…"></textarea>
+<label>Personnes de référence</label><div id="b_rf"></div><button class="btn alt" id="add_rf">Ajouter une personne de référence</button>
+<label style="font-weight:400"><input type="checkbox" id="oathOn" style="width:auto"> Ajouter en fin de CV la déclaration sur l'honneur, le nom et la signature</label>
+<textarea id="oath" style="min-height:60px"></textarea>
+<label>Compétences (séparées par des virgules)</label><input id="skills">
+<button class="btn" id="pdfCv">Exporter en PDF</button><button class="btn alt" id="htmlCv">Télécharger en HTML</button>
+<p class="hint">Dans la fenêtre d'impression, choisissez « Enregistrer en PDF ». Export Word : à venir.</p>
+</div><div><div class="paper" id="cvPrev"></div><p class="hint">Aperçu : <b id="pgn">1 page</b>. Les pointillés orange marquent les sauts de page (approximatifs).</p></div></div>
+<h2 style="margin-top:28px">Modèles de CV</h2><p class="hint">Choisissez un modèle : il s'applique à votre CV avec vos informations.</p><div class="gal" id="gal"></div></section>
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <title>Dossier Emploi</title>
-    <link rel="manifest" href="manifest.webmanifest">
-    <meta name="theme-color" content="#0f6b5c">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="Dossier Emploi">
-    <link rel="icon" href="icons/icon-192.png">
-    <link rel="apple-touch-icon" href="icons/icon-192.png">
-    <link rel="stylesheet" href="css/style.css">
-</head>
+<section id="lt"><div class="two"><div>
+<h2>Lettre de motivation</h2>
+<div class="row"><div><label>Destinataire</label><input id="lrec" placeholder="Monsieur le Directeur Général"></div><div><label>Entreprise</label><input id="lco" placeholder="Conseil Congolais de la Batterie (CCB)"></div></div>
+<div class="row"><div><label>Adresse ou ville du destinataire</label><input id="ladr" placeholder="Kinshasa Gombe"></div><div><label>Objet</label><input id="lpo" placeholder="Demande de stage professionnel"></div></div>
+<div class="row"><div><label>Mise en forme</label><select id="lfont"><option value="Georgia,serif">Serif</option><option value="system-ui,sans-serif">Sans</option></select></div>
+<div><label>Signature</label><select id="lsig"><option value="right">À droite</option><option value="left">À gauche</option><option value="none">Sans</option></select></div></div>
+<div class="row" style="margin-top:12px"><button class="btn alt" data-f="bold">Gras</button><button class="btn alt" data-f="italic">Italique</button></div>
+<label>Texte</label><div id="ltxt" contenteditable="true" style="min-height:240px;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px"></div>
+<button class="btn" id="pdfLt">Exporter en PDF</button>
+</div><div><div class="paper" id="ltPrev"></div></div></div></section>
 
-<body>
-    <div id="auth">
-        <div>
-            <h1>Dossier Emploi</h1>
-            <p class="hint">Connectez-vous pour retrouver votre dossier sur tous vos appareils.</p>
-            <label>E-mail</label><input id="aem" type="email" autocomplete="email"><label>Mot de passe</label><input
-                id="apw" type="password" autocomplete="current-password">
-            <div class="row"><button class="btn" id="li">Se connecter</button><button class="btn alt" id="su">Créer un
-                    compte</button></div>
-            <p id="amsg"></p><button class="btn alt" id="gg" style="width:100%">Continuer avec Google</button><button
-                class="btn alt" id="ap" style="width:100%">Continuer avec Apple</button><button class="lnk" id="fg">Mot
-                de passe oublié ?</button>
-        </div>
-    </div>
-    <header>
-        <div id="tools"><select id="thm" aria-label="Thème">
-                <option value="auto">Thème : auto</option>
-                <option value="light">Clair</option>
-                <option value="dark">Sombre</option>
-            </select><select id="acc" aria-label="Couleur">
-                <option value="vert">Vert</option>
-                <option value="bleu">Bleu</option>
-                <option value="violet">Violet</option>
-                <option value="orange">Orange</option>
-            </select><button class="btn" id="inst" style="display:none;margin:0;padding:6px 10px">Installer
-                l'application</button><span id="sav" class="hint" style="align-self:center;margin:0"></span><span
-                id="who" class="hint" style="align-self:center;margin:0"></span><button class="btn alt" id="out"
-                style="margin:0;padding:6px 10px">Se déconnecter</button></div>
-        <h1>Dossier Emploi</h1>
-        <p>CV, lettre, signature, pièces et suivi au même endroit.</p>
-    </header>
-    <nav id="nav"></nav>
-    <main>
-        <section id="cv">
-            <div class="two">
-                <div>
-                    <h2>CV</h2>
-                    <label>Modèle</label><select id="tpl">
-                        <option value="t1">Classique</option>
-                        <option value="t2">Moderne</option>
-                        <option value="t3">Sobre</option>
-                        <option value="t4">Marine</option>
-                        <option value="t5">Minimal</option>
-                        <option value="t6">Corail</option>
-                    </select>
-                    <label>Marges gauche et droite : <span id="mxv">17</span> mm</label><input type="range" id="mx"
-                        min="8" max="30" value="17">
-                    <div class="row">
-                        <div><label>Nom complet</label><input id="name"></div>
-                        <div><label>Poste visé</label><input id="title"></div>
-                    </div>
-                    <div class="row">
-                        <div><label>E-mail</label><input id="email"></div>
-                        <div><label>Téléphone</label><input id="phone"></div>
-                        <div><label>Ville</label><input id="city"></div>
-                    </div>
-                    <label>Photo</label><input type="file" id="photo" accept="image/*">
-                    <label>Profil</label><textarea id="summary"></textarea>
-                    <label>Expériences professionnelles</label>
-                    <div id="xps"></div><button class="btn alt" id="addXp">Ajouter une expérience</button>
-                    <label>Parcours académique (études)</label>
-                    <div id="eds"></div><button class="btn alt" id="addEd">Ajouter un diplôme ou cycle d'études</button>
-                    <label>Formations complémentaires (certificats, stages, formations régulières)</label>
-                    <div id="b_fc"></div><button class="btn alt" id="add_fc">Ajouter une formation
-                        complémentaire</button>
-                    <label>Connaissances linguistiques</label>
-                    <div id="b_lg"></div><button class="btn alt" id="add_lg">Ajouter une langue</button>
-                    <label>Maîtrise informatique</label>
-                    <div id="b_it"></div><button class="btn alt" id="add_it">Ajouter un logiciel ou une
-                        compétence</button>
-                    <label>Centres d'intérêt</label><input id="hobbies" placeholder="Lecture, football, bénévolat…">
-                    <label>Autres informations</label><textarea id="other"
-                        placeholder="Permis de conduire, disponibilité, engagements…"></textarea>
-                    <label>Personnes de référence</label>
-                    <div id="b_rf"></div><button class="btn alt" id="add_rf">Ajouter une personne de référence</button>
-                    <label style="font-weight:400"><input type="checkbox" id="oathOn" style="width:auto"> Ajouter en fin
-                        de CV la déclaration sur l'honneur, le nom et la signature</label>
-                    <textarea id="oath" style="min-height:60px"></textarea>
-                    <label>Compétences (séparées par des virgules)</label><input id="skills">
-                    <button class="btn" id="pdfCv">Exporter en PDF</button><button class="btn alt"
-                        id="htmlCv">Télécharger en HTML</button>
-                    <p class="hint">Dans la fenêtre d'impression, choisissez « Enregistrer en PDF ». Export Word : à
-                        venir.</p>
-                </div>
-                <div>
-                    <div class="paper" id="cvPrev"></div>
-                    <p class="hint">Aperçu : <b id="pgn">1 page</b>. Les pointillés orange marquent les sauts de page
-                        (approximatifs).</p>
-                </div>
-            </div>
-            <h2 style="margin-top:28px">Modèles de CV</h2>
-            <p class="hint">Choisissez un modèle : il s'applique à votre CV avec vos informations.</p>
-            <div class="gal" id="gal"></div>
-        </section>
+<section id="sg"><h2>Signature électronique</h2>
+<p class="hint">Dessinez avec la souris ou le doigt, ou importez une image.</p>
+<canvas id="cnv" width="520" height="180"></canvas>
+<div class="row" style="max-width:520px"><button class="btn" id="saveSig">Utiliser ce dessin</button><button class="btn alt" id="clr">Effacer</button></div>
+<label>Importer une image</label><input type="file" id="sigFile" accept="image/*" style="max-width:520px">
+<label>Taille (<span id="szv">160</span> px)</label><input type="range" id="sz" min="60" max="320" value="160" style="max-width:520px">
+<p class="hint">Le fond clair est supprimé automatiquement. Position dans la lettre : onglet Lettre.</p>
+<div id="sigPrev" style="background:#fff;padding:12px;display:inline-block;border:1px solid var(--line)"></div></section>
 
-        <section id="lt">
-            <div class="two">
-                <div>
-                    <h2>Lettre de motivation</h2>
-                    <div class="row">
-                        <div><label>Destinataire</label><input id="lrec" placeholder="Monsieur le Directeur Général">
-                        </div>
-                        <div><label>Entreprise</label><input id="lco"
-                                placeholder="Conseil Congolais de la Batterie (CCB)"></div>
-                    </div>
-                    <div class="row">
-                        <div><label>Adresse ou ville du destinataire</label><input id="ladr"
-                                placeholder="Kinshasa Gombe"></div>
-                        <div><label>Objet</label><input id="lpo" placeholder="Demande de stage professionnel"></div>
-                    </div>
-                    <div class="row">
-                        <div><label>Mise en forme</label><select id="lfont">
-                                <option value="Georgia,serif">Serif</option>
-                                <option value="system-ui,sans-serif">Sans</option>
-                            </select></div>
-                        <div><label>Signature</label><select id="lsig">
-                                <option value="right">À droite</option>
-                                <option value="left">À gauche</option>
-                                <option value="none">Sans</option>
-                            </select></div>
-                    </div>
-                    <div class="row" style="margin-top:12px"><button class="btn alt" data-f="bold">Gras</button><button
-                            class="btn alt" data-f="italic">Italique</button></div>
-                    <label>Texte</label>
-                    <div id="ltxt" contenteditable="true"
-                        style="min-height:240px;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px">
-                    </div>
-                    <button class="btn" id="pdfLt">Exporter en PDF</button>
-                </div>
-                <div>
-                    <div class="paper" id="ltPrev"></div>
-                </div>
-            </div>
-        </section>
-
-        <section id="sg">
-            <h2>Signature électronique</h2>
-            <p class="hint">Dessinez avec la souris ou le doigt, ou importez une image.</p>
-            <canvas id="cnv" width="520" height="180"></canvas>
-            <div class="row" style="max-width:520px"><button class="btn" id="saveSig">Utiliser ce dessin</button><button
-                    class="btn alt" id="clr">Effacer</button></div>
-            <label>Importer une image</label><input type="file" id="sigFile" accept="image/*" style="max-width:520px">
-            <label>Taille (<span id="szv">160</span> px)</label><input type="range" id="sz" min="60" max="320"
-                value="160" style="max-width:520px">
-            <p class="hint">Le fond clair est supprimé automatiquement. Position dans la lettre : onglet Lettre.</p>
-            <div id="sigPrev" style="background:#fff;padding:12px;display:inline-block;border:1px solid var(--line)">
-            </div>
-        </section>
-
-        <section id="pj">
-            <h2>Pièces jointes et coffre-fort</h2>
-            <p class="hint">Diplômes, certificats, attestations, pièces d'identité, photos. Cochez celles à inclure dans
-                le dossier. Les fichiers restent dans cette session.</p>
-            <input type="file" id="fileIn" multiple accept="image/*,application/pdf">
-            <ul class="files" id="fileList"></ul>
-        </section>
+<section id="pj"><h2>Pièces jointes et coffre-fort</h2>
+<p class="hint">Diplômes, certificats, attestations, pièces d'identité, photos. Cochez celles à inclure dans le dossier. Les fichiers restent dans cette session.</p>
+<input type="file" id="fileIn" multiple accept="image/*,application/pdf">
+<ul class="files" id="fileList"></ul></section>
 
 
 
-        <section id="sv">
-            <h2>Suivi des candidatures</h2>
-            <div class="row">
-                <div><label>Entreprise</label><input id="a1"></div>
-                <div><label>Poste</label><input id="a2"></div>
-                <div><label>Date d'envoi</label><input id="a3" type="date"></div>
-                <div><label>Statut</label><select id="a4">
-                        <option>Envoyée</option>
-                        <option>En attente</option>
-                        <option>Entretien</option>
-                        <option>Refusée</option>
-                        <option>Acceptée</option>
-                    </select></div>
-                <div><label>Date de relance</label><input id="a5" type="date"></div>
-            </div>
-            <label>Notes personnelles</label><textarea id="a6" style="min-height:60px"></textarea>
-            <button class="btn" id="addApp">Ajouter la candidature</button>
-            <div style="overflow-x:auto;margin-top:14px">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Entreprise</th>
-                            <th>Poste</th>
-                            <th>Envoi</th>
-                            <th>Statut</th>
-                            <th>Relance</th>
-                            <th>Notes</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody id="apps"></tbody>
-                </table>
-            </div>
-        </section>
-        <section id="dp">
-            <h2>Dossier complet</h2>
-            <ul class="files" id="check"></ul>
-            <button class="btn" id="pdfAll">PDF du dossier (lettre, CV, pièces)</button><button class="btn alt"
-                id="zipAll">Archive ZIP</button>
-            <p class="hint">Le PDF passe par l'impression du navigateur : choisissez « Enregistrer en PDF ».</p>
-        </section>
-    </main>
-    <footer>Powered by <b>Nkokwe Digital Solutions</b></footer>
-    <div id="pr"></div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-    <script src="js/config.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/pwa.js"></script>
-</body>
-
-</html>
+<section id="sv"><h2>Suivi des candidatures</h2>
+<div class="row"><div><label>Entreprise</label><input id="a1"></div><div><label>Poste</label><input id="a2"></div><div><label>Date d'envoi</label><input id="a3" type="date"></div><div><label>Statut</label><select id="a4"><option>Envoyée</option><option>En attente</option><option>Entretien</option><option>Refusée</option><option>Acceptée</option></select></div><div><label>Date de relance</label><input id="a5" type="date"></div></div>
+<label>Notes personnelles</label><textarea id="a6" style="min-height:60px"></textarea>
+<button class="btn" id="addApp">Ajouter la candidature</button>
+<div style="overflow-x:auto;margin-top:14px"><table><thead><tr><th>Entreprise</th><th>Poste</th><th>Envoi</th><th>Statut</th><th>Relance</th><th>Notes</th><th></th></tr></thead><tbody id="apps"></tbody></table></div></section>
+<section id="dp"><h2>Dossier complet</h2>
+<ul class="files" id="check"></ul>
+<button class="btn" id="pdfAll">PDF du dossier (lettre, CV, pièces)</button><button class="btn alt" id="zipAll">Archive ZIP</button>
+<p class="hint">Le PDF passe par l'impression du navigateur : choisissez « Enregistrer en PDF ».</p></section>
+</main>
+<footer>Powered by <b>Nkokwe Digital Solutions</b></footer>
+<div id="pr"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="js/config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/import.js"></script>
+<script src="js/app.js"></script>
+<script src="js/pwa.js"></script>
+</body></html>
