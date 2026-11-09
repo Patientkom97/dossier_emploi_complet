@@ -363,8 +363,24 @@ h2 {
 }
 
 .xp {
+    break-inside: auto
+}
+
+.xp li,
+.kp {
     break-inside: avoid;
     page-break-inside: avoid
+}
+
+.xp>.sub {
+    break-before: avoid;
+    break-after: avoid
+}
+
+.paper li,
+.paper p {
+    orphans: 2;
+    widows: 2
 }
 
 .paper h4 {
@@ -549,3 +565,5 @@ body:not(.in) main {
     padding: 0;
     margin-top: 10px
 }
+
+s
