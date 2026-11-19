@@ -1,0 +1,96 @@
+#adm {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px
+}
+
+#adm .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 18px;
+    margin-bottom: 16px
+}
+
+#aLogin {
+    max-width: 380px;
+    margin: 12vh auto 0
+}
+
+#adm .bar {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 12px
+}
+
+#adm .bar h1 {
+    flex: 1;
+    margin: 0;
+    font-size: 22px
+}
+
+#adm .row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap
+}
+
+#adm .row>div {
+    flex: 1;
+    min-width: 200px
+}
+
+.code {
+    font: 700 26px/1.2 ui-monospace, Menlo, Consolas, monospace;
+    letter-spacing: .08em;
+    background: var(--bg);
+    border: 2px dashed var(--acc);
+    border-radius: 8px;
+    padding: 14px;
+    text-align: center;
+    margin: 14px 0 10px;
+    user-select: all
+}
+
+#aTab {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px
+}
+
+#aTab th,
+#aTab td {
+    text-align: left;
+    padding: 7px 8px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top
+}
+
+#aTab code {
+    font-weight: 700;
+    user-select: all
+}
+
+.tag {
+    display: inline-block;
+    border-radius: 10px;
+    padding: 1px 8px;
+    font-size: 12px
+}
+
+.tag.ok {
+    background: #d9f0e3;
+    color: #14633a
+}
+
+.tag.us {
+    background: #e3e8f5;
+    color: #27407a
+}
+
+.tag.rv {
+    background: #f6dcdc;
+    color: #8a2020
+}

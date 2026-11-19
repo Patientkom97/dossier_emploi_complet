@@ -940,3 +940,19 @@ header::after {
     display: block;
     clear: both
 }
+
+.keybox {
+    margin: 14px 0 4px;
+    padding-top: 10px;
+    border-top: 1px solid var(--line)
+}
+
+.keybox .row {
+    display: flex;
+    gap: 8px
+}
+
+.keybox .keyIn {
+    text-transform: uppercase;
+    letter-spacing: .05em
+}

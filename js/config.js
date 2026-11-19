@@ -3,7 +3,7 @@ const SB_URL = 'https://ncktrdsdmccwfqestdkk.supabase.co';
 const SB_KEY = 'sb_publishable_rTwHXl1AUYkaxFy58OJHjw_h-KJYT9_';
 
 // ---- Offre Premium (à adapter) ----
-const TRIAL_DAYS = 0;                  // TEST : 0 = paiement exigé tout de suite. Remettre 30 avant le lancement public !
+const TRIAL_DAYS = 30;                 // durée de l'essai gratuit complet (les clés d'accès donnent Premium immédiatement)
 const LAUNCH_DATE = '2026-11-09';      // les comptes plus anciens démarrent leur essai à cette date
 const PREMIUM_PRICE = '5 USD par mois';  // prix affiché
 const PREMIUM_DAYS = 30;               // durée ajoutée par paiement (indicatif, voir SETUP.md)

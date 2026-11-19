@@ -72,3 +72,12 @@ L'essai démarre à la création du compte, ou à LAUNCH_DATE pour les comptes p
    Optionnels : `INTASEND_LIVE=true` (production), `PREMIUM_AMOUNT=5`, `PREMIUM_DAYS=30`.
 4. Test : bouton « Payer maintenant » dans la fenêtre Premium (mode test : aucun argent réel).
 5. Production : approbation du compte IntaSend, puis clés `live`, `INTASEND_LIVE=true` des deux côtés.
+
+
+## Terminal administrateur : clés d'accès Premium (paiements reçus par WhatsApp)
+1. Supabase > SQL Editor > coller `sql/cles.sql` > Run (une fois). Vérifiez en bas du fichier que l'e-mail administrateur est le vôtre.
+2. Ouvrez `https://VOTRE-SITE/admin.html`, connectez-vous avec le compte administrateur (e-mail + mot de passe ; un compte créé avec Google n'a pas de mot de passe : utilisez un compte e-mail).
+3. Après vérification du paiement : choisissez la durée, indiquez le nom/la référence, « Générer la clé », puis « Copier le message WhatsApp » et collez-le au client.
+4. Le client ouvre Ajira > « Passer à Premium » > « J'ai une clé d'accès » > Activer. Chaque clé ne sert qu'une fois et s'ajoute à son abonnement en cours.
+5. Le tableau liste les clés (disponible / utilisée par … / annulée). Seul un compte présent dans la table `admins` peut générer ou lister les clés (contrôle côté base de données).
+6. Ajouter un autre administrateur : `insert into admins select id from auth.users where email='autre@exemple.com';`

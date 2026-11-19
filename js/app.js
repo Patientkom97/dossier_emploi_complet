@@ -23,6 +23,7 @@
 <p><button class="btn payOnline" type="button">Payer maintenant (Mobile Money)</button></p><p class="payMsg hint" role="status"></p>
 <p>Ou paiement manuel :</p>
 <p><a class="btn alt" style="display:inline-block;text-decoration:none" target="_blank" rel="noopener" href="https://wa.me/${wa}?text=${msg}">Envoyer la preuve par WhatsApp</a></p>
+<div class="keybox"><label>J'ai une clé d'accès</label><div class="row"><input class="keyIn" placeholder="AJ-XXXX-XXXX-XXXX" autocapitalize="characters" autocomplete="off" spellcheck="false"><button class="btn keyGo" type="button" style="flex:none">Activer</button></div><p class="keyMsg hint" role="status"></p></div>
 <p class="hint">Votre accès est activé après vérification du paiement, en général dans la journée. Rechargez ensuite la page.</p></div>`}
     // Paiement en ligne IntaSend : le widget encaisse, puis la fonction serveur vérifie et active Premium
     async function payOnline(btn) {
@@ -44,7 +45,15 @@
         }
         catch (x) { btn.disabled = false; say('Erreur : ' + x.message) }
     }
-    document.addEventListener('click', ev => { const b = ev.target.closest && ev.target.closest('.payOnline'); if (b) payOnline(b) });
+    async function useKey(btn) {
+        const box = btn.closest('.keybox'), inp = box.querySelector('.keyIn'), m = box.querySelector('.keyMsg'), code = inp.value.trim();
+        if (!code) return m.textContent = "Saisissez votre clé d'accès."; btn.disabled = true; m.textContent = 'Vérification…';
+        const { data, error } = await sb.rpc('activer_cle', { p_code: code }); btn.disabled = false;
+        if (error) return m.textContent = "Activation impossible : le SQL des clés n'est pas installé (voir sql/cles.sql).";
+        if (!data || !data.ok) { const E = { invalide: "Clé inconnue : vérifiez les caractères.", utilisee: 'Cette clé a déjà été utilisée.', revoquee: 'Cette clé a été annulée.', non_connecte: 'Connectez-vous d\'abord.' }; return m.textContent = E[data && data.error] || 'Clé refusée.' }
+        m.textContent = 'Premium activé ! Rechargement…'; setTimeout(() => location.reload(), 1200)
+    }
+    document.addEventListener('click', ev => { const t = ev.target.closest ? ev.target : ev.target.parentElement, b = t.closest('.payOnline'); if (b) payOnline(b); const k = t.closest('.keyGo'); if (k) useKey(k) });
     function openPay(what) { $('payBody').innerHTML = payHtml(what); $('payModal').hidden = false }
     function planR() {
         const b = $('plan'); b.textContent = PLAN.premium ? 'Premium jusqu\'au ' + PLAN.until.toLocaleDateString('fr-FR') : inTrial() ? 'Essai : ' + daysLeft(PLAN.trialEnd) + ' j restants' : 'Passer à Premium';
