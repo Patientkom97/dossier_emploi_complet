@@ -1,4 +1,6 @@
 // Authentification : création de compte (formulaire), connexion par e-mail / téléphone / nom d'utilisateur, Google, Apple
+// À capturer AVANT createClient : supabase-js efface le #fragment de l'adresse après lecture
+const REC0 = /type=recovery/.test(location.hash + location.search);
 const sb = supabase.createClient(SB_URL, SB_KEY);
 
 // --- identifiants ---
@@ -21,26 +23,41 @@ async function resolveEmail(ident) {
 }
 
 // --- messages d'erreur en français ---
+const tech = e => e ? ` [${[e.code, e.status].filter(Boolean).join(' / ') || '?'}]` : '';
 const frErr = (e, A) => {
      const m = (e && (e.message || '')) + ' ' + (e && e.code || '');
-     if (/Invalid login credentials|invalid_credentials/i.test(m)) return "Identifiant ou mot de passe incorrect. Touchez l'œil pour voir le mot de passe saisi. Si le compte a été créé avec Google ou Apple, utilisez ce bouton. Sinon, « Mot de passe oublié ? ».";
+     if (/Invalid login credentials|invalid_credentials/i.test(m)) return "Identifiant ou mot de passe incorrect. Touchez l'œil pour voir le mot de passe saisi. Si le compte a été créé avec Google ou Apple, utilisez ce bouton. Sinon, « Mot de passe oublié ? »." + tech(e);
      if (/not confirmed|email_not_confirmed/i.test(m)) { if (A) A('rs').style.display = ''; return "Adresse e-mail non confirmée : cliquez sur le lien reçu par e-mail, ou sur « Renvoyer l'e-mail de confirmation »." }
      if (/already registered|user_already_exists/i.test(m)) return "Cet e-mail a déjà un compte : retournez à la connexion (ou « Mot de passe oublié ? »).";
      if (/rate limit|over_email_send_rate_limit|over_request_rate_limit/i.test(m)) return "Trop de demandes : patientez environ une heure, ou connectez-vous si le compte existe déjà.";
      if (/at least 6|weak_password/i.test(m)) return "Le mot de passe doit contenir au moins 6 caractères.";
      if (/resoudre_identifiant|schema cache|does not exist|PGRST/i.test(m)) return "Connexion par téléphone ou nom d'utilisateur indisponible : le SQL des profils n'est pas encore installé (voir SETUP.md). Utilisez votre e-mail.";
-     return 'Erreur : ' + (e && e.message || 'inconnue') + (e && e.code ? ' (' + e.code + ')' : '')
+     console.warn('Erreur auth', e); return 'Erreur : ' + (e && e.message || 'inconnue') + (e && e.code ? ' (' + e.code + ')' : '') + (e && e.status ? ' – HTTP ' + e.status : '')
 };
 
 async function authGate() {
      const A = id => document.getElementById(id), msg = t => A('amsg').textContent = t, rmsg = t => { A('rmsg').textContent = t; A('rmsg').scrollIntoView({ block: 'nearest' }) };
-     const { data: { session } } = await sb.auth.getSession();
-     if (!session) {
+     let session = null;
+     try { const r = await sb.auth.getSession(); session = r.data.session; if (r.error) throw r.error }
+     catch (x) { console.warn('Session invalide, nettoyage', x); session = null; try { await sb.auth.signOut({ scope: 'local' }) } catch (y) { } }
+     const REC = REC0;
+     if (!session || REC) {
           A('auth').style.display = 'flex';
           const back = location.origin + location.pathname;
           const eye = (btn, inp) => btn.onclick = () => { const v = inp.type === 'password'; inp.type = v ? 'text' : 'password'; btn.classList.toggle('on', v); btn.setAttribute('aria-label', v ? 'Masquer le mot de passe' : 'Afficher le mot de passe') };
-          eye(A('shw'), A('apw')); document.querySelectorAll('#viewReg .eye').forEach(b => eye(b, b.previousElementSibling));
+          eye(A('shw'), A('apw')); document.querySelectorAll('#viewReg .eye,#viewRec .eye').forEach(b => eye(b, b.previousElementSibling));
 
+          // ----- lien « mot de passe oublié » : saisie du nouveau mot de passe -----
+          if (REC && session) {
+               A('viewLogin').hidden = true; A('viewRec').hidden = false;
+               A('viewRec').onsubmit = async ev => {
+                    ev.preventDefault(); const p = A('n_pw').value, q = A('n_pw2').value, m = t => A('nmsg').textContent = t;
+                    if (p.length < 6) return m('Le mot de passe doit contenir au moins 6 caractères.'); if (p !== q) return m('Les deux mots de passe ne sont pas identiques.');
+                    m('Enregistrement…'); const { error } = await sb.auth.updateUser({ password: p });
+                    if (error) return m(frErr(error, null)); m('Mot de passe enregistré. Ouverture…'); history.replaceState(null, '', location.pathname); setTimeout(() => location.reload(), 900)
+               };
+               return null
+          }
           // ----- vues -----
           const show = reg => { A('viewLogin').hidden = reg; A('viewReg').hidden = !reg; (reg ? A('r_prenom') : A('aem')).focus() };
           A('su').onclick = () => show(true); A('r_back').onclick = () => show(false);
@@ -55,7 +72,9 @@ async function authGate() {
                try {
                     const email = await resolveEmail(ident);
                     if (!email) return msg(frErr({ code: 'invalid_credentials' }, A));
-                    const { error } = await sb.auth.signInWithPassword({ email, password: pw });
+                    try { await sb.auth.signOut({ scope: 'local' }) } catch (y) { }
+                    let { error } = await sb.auth.signInWithPassword({ email, password: pw });
+                    if (error && pw !== pw.trim()) ({ error } = await sb.auth.signInWithPassword({ email, password: pw.trim() }));
                     error ? msg(frErr(error, A)) : location.reload()
                }
                catch (x) { msg(frErr(x, A)) }

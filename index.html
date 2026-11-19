@@ -40,6 +40,20 @@
                     style="width:100%">Créer un compte</button>
                 <button class="lnk" id="fg">Mot de passe oublié ?</button>
             </div>
+            <form id="viewRec" hidden novalidate>
+                <p class="hint">Choisissez un nouveau mot de passe pour votre compte. Il vous servira aussi si votre
+                    compte a été créé avec Google ou Apple.</p>
+                <label for="n_pw">Nouveau mot de passe</label>
+                <div class="pw"><input id="n_pw" type="password" autocomplete="new-password" autocapitalize="none"
+                        autocorrect="off" spellcheck="false"><button type="button" class="eye"
+                        aria-label="Afficher le mot de passe">👁</button></div>
+                <label for="n_pw2">Confirmer le mot de passe</label>
+                <div class="pw"><input id="n_pw2" type="password" autocomplete="new-password" autocapitalize="none"
+                        autocorrect="off" spellcheck="false"><button type="button" class="eye"
+                        aria-label="Afficher le mot de passe">👁</button></div>
+                <button class="btn" id="n_go" type="submit" style="width:100%">Enregistrer le mot de passe</button>
+                <p id="nmsg" role="status"></p>
+            </form>
             <form id="viewReg" hidden novalidate>
                 <p class="hint">Créez votre compte pour enregistrer vos documents et les retrouver partout.</p>
                 <div class="row">

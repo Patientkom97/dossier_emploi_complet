@@ -40,7 +40,7 @@
         try {
             const ins = new window.IntaSend({ publicAPIKey: INTASEND_PUBLIC_KEY, live: INTASEND_LIVE });
             ins.on('COMPLETE', verify).on('FAILED', () => { btn.disabled = false; say('Paiement échoué ou annulé. Vous pouvez réessayer.') }).on('IN-PROGRESS', () => say('Paiement en cours…'));
-            ins.run({ amount: PREMIUM_AMOUNT, currency: PREMIUM_CURRENCY, api_ref: U.id, email: U.email || undefined, first_name: (U.user_metadata || {}).prenom, last_name: (U.user_metadata || {}).nom, phone_number: ((U.user_metadata || {}).telephone || '').replace(/\D/g, '') || undefined });
+            ins.run({ amount: PREMIUM_AMOUNT, currency: PREMIUM_CURRENCY, api_ref: U.id, email: U.email || undefined, first_name: (U.user_metadata || {}).prenom, last_name: (U.user_metadata || {}).nom });
             setTimeout(() => { btn.disabled = false }, 2500)
         }
         catch (x) { btn.disabled = false; say('Erreur : ' + x.message) }
