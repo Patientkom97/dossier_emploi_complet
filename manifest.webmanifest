@@ -1,7 +1,7 @@
 {
-  "name": "Dossier Emploi",
-  "short_name": "Dossier Emploi",
-  "description": "CV, lettre de motivation, signature, pièces et suivi des candidatures.",
+  "name": "Ajira",
+  "short_name": "Ajira",
+  "description": "Ajira : CV, lettre de motivation, signature, pièces et suivi des candidatures.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
