@@ -1,6 +1,6 @@
 // Service worker : l'appli s'ouvre même avec une connexion faible.
 // Changer VERSION à chaque mise à jour importante pour vider l'ancien cache.
-const VERSION = 'ajira-v7', CACHE = VERSION;
+const VERSION = 'ajira-v8', CACHE = VERSION;
 const SHELL = ['./', 'index.html', 'css/style.css', 'js/config.js', 'js/auth.js', 'js/app.js', 'js/pwa.js', 'js/import.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/logo.png', 'icons/mark.png', 'icons/icon-512.png'];
 const CDN = ['cdnjs.cloudflare.com', 'cdn.jsdelivr.net'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())) });
