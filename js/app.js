@@ -15,8 +15,7 @@ return `<div class="pay"><span class="tag">Premium</span><h2>${what?e(what)+' : 
 <p>${inTrial()?`Votre essai gratuit se termine le ${fdate(PLAN.trialEnd)}.`:'Votre mois d\'essai gratuit est terminé.'} Le CV, la lettre de motivation et leur téléchargement en PDF restent <b>toujours gratuits</b>.</p>
 <p><b>Avec Premium :</b></p><ul><li>Dossier complet (PDF fusionné ou archive ZIP)</li><li>Signature électronique</li><li>Import d'un ancien CV</li><li>Enregistrement en Word</li></ul>
 <div class="price">${e(PREMIUM_PRICE)}</div><p>${e(PAY_INSTRUCTIONS)}</p>
-<p><button class="btn payOnline" type="button">Payer maintenant (Mobile Money)</button></p><p class="payMsg hint" role="status"></p>
-<p>Ou paiement manuel :</p>
+${PAIEMENT_EN_LIGNE?'<p><button class="btn payOnline" type="button">Payer maintenant (Mobile Money)</button></p><p class="payMsg hint" role="status"></p><p>Ou paiement manuel :</p>':''}
 <p><a class="btn alt" style="display:inline-block;text-decoration:none" target="_blank" rel="noopener" href="https://wa.me/${wa}?text=${msg}">Envoyer la preuve par WhatsApp</a></p>
 <div class="keybox"><label>J'ai une clé d'accès</label><div class="row"><input class="keyIn" placeholder="AJ-XXXX-XXXX-XXXX" autocapitalize="characters" autocomplete="off" spellcheck="false"><button class="btn keyGo" type="button" style="flex:none">Activer</button></div><p class="keyMsg hint" role="status"></p></div>
 <p class="hint">Votre accès est activé après vérification du paiement, en général dans la journée. Rechargez ensuite la page.</p></div>`}

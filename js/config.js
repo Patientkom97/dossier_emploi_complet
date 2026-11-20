@@ -18,3 +18,6 @@ const INTASEND_PUBLIC_KEY='ISPubKey_test_6ec1cf55-2c01-4ece-8283-7d6224e871ca';
 const INTASEND_LIVE=false;          // passer à true avec la clé ISPubKey_live_... en production
 const PREMIUM_AMOUNT=5;             // doit correspondre à PREMIUM_AMOUNT de la fonction
 const PREMIUM_CURRENCY='USD';
+
+// Paiement en ligne : false = bouton masqué (seules les clés d'accès WhatsApp restent proposées). Passer à true quand un prestataire est intégré.
+const PAIEMENT_EN_LIGNE=false;

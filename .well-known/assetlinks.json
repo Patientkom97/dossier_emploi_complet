@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.nkokwe.ajira",
+      "sha256_cert_fingerprints": [
+        "E5:70:3D:8C:B6:D7:45:7B:D7:A5:76:45:97:38:B2:57:AF:8C:FC:EE:14:F5:5C:CB:B8:0D:6B:FD:8E:7E:8A:57"
+      ]
+    }
+  }
+]
